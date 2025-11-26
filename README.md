@@ -1,7 +1,7 @@
 # Laby
 ## Zajęcia 1
 - [T1. PKI - Cykl życia certyfikatu, diagramy sekwencyjne](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/EbE-WmSog9xKpWpNrFL1_t0BNO6FxhAIODxyMy9zgcC44w?e=whhT7J) (do zrobienia do 25 listopada)
-- [T2. Symulacja działania PKI](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQDh4XqywAqXQpbbIjWpNlXQAW-u7fPhVxQ-6YqCeVQu6zE?e=Cz9cV0)
+- [T2. Symulacja działania PKI](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQCcMEFP7_yaRZeMQ2_0Z63WAc2w-IwCD80miPIZo769WA0?e=RBll3G)
 
 # Projekt
 ## Zajęcia 1
