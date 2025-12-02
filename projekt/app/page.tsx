@@ -1,63 +1,196 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { GlobeLock, Shield } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+    <div className="h-screen w-screen overflow-hidden bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* Header */}
+      <header className="flex h-16 items-center justify-center border-b border-slate-200 dark:border-slate-700">
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+          Symulacja protokołu OpenVPN
+        </h1>
+      </header>
+
+      {/* Main Board */}
+      <main className="flex h-[calc(100vh-4rem)] items-center justify-center px-8">
+        <div className="flex w-full max-w-6xl items-center justify-between">
+          {/* Client Device */}
+          <Card className="flex-col">
+            <CardHeader>
+              <CardTitle>Użytkownik końcowy</CardTitle>
+              <CardDescription>Komputer Stacjonarny</CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <CardAction>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Wyświetl szczegóły</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Share link</DialogTitle>
+                      <DialogDescription>
+                        Anyone who has this link will be able to view this.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center gap-2"></div>
+                    <DialogFooter className="sm:justify-start">
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Close
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardAction>
+            </CardFooter>
+          </Card>
+
+          {/* Connection line: Device to VPN Client */}
+          <div className="flex-1 px-2">
+            <div className="h-0.5 w-full border-t-2 border-dashed border-slate-300 dark:border-slate-600" />
+          </div>
+
+          {/* VPN Client Process */}
+          <Card className="border-blue-600 dark:border-blue-400">
+            <CardHeader>
+              <CardTitle>VPN Klient</CardTitle>
+              <CardDescription>Enkrypcja danych</CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <CardAction>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Wyświetl szczegóły</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Share link</DialogTitle>
+                      <DialogDescription>
+                        Anyone who has this link will be able to view this.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center gap-2"></div>
+                    <DialogFooter className="sm:justify-start">
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Close
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardAction>
+            </CardFooter>
+          </Card>
+
+          {/* VPN Tunnel */}
+          <div className="flex-1 px-2">
+            <div className="relative flex items-center">
+              <Shield className="absolute left-1/2 -top-8 -translate-x-1/2 text-blue-600 dark:text-blue-400" />
+              <div className="h-0.5 w-full border-t-2 border-dashed border-slate-300 dark:border-slate-600" />
+              <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-medium text-blue-600 dark:text-blue-400">
+                Tunel VPN
+              </span>
+            </div>
+          </div>
+
+          {/* VPN Server Process */}
+          <Card className="flex-col border-blue-600 dark:border-blue-400">
+            <CardHeader>
+              <CardTitle>VPN Serwer</CardTitle>
+              <CardDescription>Chowa adres IP oraz geolokację</CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <CardAction>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Wyświetl szczegóły</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Share link</DialogTitle>
+                      <DialogDescription>
+                        Anyone who has this link will be able to view this.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center gap-2"></div>
+                    <DialogFooter className="sm:justify-start">
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Close
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardAction>
+            </CardFooter>
+          </Card>
+          {/* Connection line: VPN Server to Internet */}
+          <div className="flex-1 px-2">
+            <div className="relative flex items-center">
+              <div className="h-0.5 w-full border-t-2 border-dashed border-slate-300 dark:border-slate-600" />
+              <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                Increased privacy
+              </span>
+            </div>
+          </div>
+
+          {/* Internet */}
+          <Card className="flex flex-1 flex-col w-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                Internet <GlobeLock />
+              </CardTitle>
+              {/*<CardDescription></CardDescription>*/}
+            </CardHeader>
+            {/*<CardFooter>
+              <CardAction>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">ewentualne szczegóły?</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Share link</DialogTitle>
+                      <DialogDescription>
+                        Anyone who has this link will be able to view this.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center gap-2"></div>
+                    <DialogFooter className="sm:justify-start">
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Close
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardAction>
+            </CardFooter>*/}
+          </Card>
         </div>
       </main>
     </div>
