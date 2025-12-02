@@ -1,3 +1,4 @@
+import { Computer, GlobeLock, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,7 +19,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { GlobeLock, Shield } from "lucide-react";
 
 export default function Home() {
   return (
@@ -34,9 +34,11 @@ export default function Home() {
       <main className="flex h-[calc(100vh-4rem)] items-center justify-center px-8">
         <div className="flex w-full max-w-6xl items-center justify-between">
           {/* Client Device */}
-          <Card className="flex-col">
+          <Card>
             <CardHeader>
-              <CardTitle>Użytkownik końcowy</CardTitle>
+              <CardTitle className="flex items-center gap-2 whitespace-nowrap">
+                Użytkownik <Computer />
+              </CardTitle>
               <CardDescription>Komputer Stacjonarny</CardDescription>
             </CardHeader>
             <CardFooter>
@@ -108,7 +110,7 @@ export default function Home() {
           <div className="flex-1 px-2">
             <div className="relative flex items-center">
               <Shield className="absolute left-1/2 -top-8 -translate-x-1/2 text-blue-600 dark:text-blue-400" />
-              <div className="h-0.5 w-full border-t-2 border-dashed border-slate-300 dark:border-slate-600" />
+              <div className="h-0.5 w-full border-t-2 border-dashed border-blue-600 dark:border-slate-600" />
               <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-medium text-blue-600 dark:text-blue-400">
                 Tunel VPN
               </span>
@@ -116,7 +118,7 @@ export default function Home() {
           </div>
 
           {/* VPN Server Process */}
-          <Card className="flex-col border-blue-600 dark:border-blue-400">
+          <Card className="border-blue-600 dark:border-blue-400">
             <CardHeader>
               <CardTitle>VPN Serwer</CardTitle>
               <CardDescription>Chowa adres IP oraz geolokację</CardDescription>
@@ -151,25 +153,24 @@ export default function Home() {
           <div className="flex-1 px-2">
             <div className="relative flex items-center">
               <div className="h-0.5 w-full border-t-2 border-dashed border-slate-300 dark:border-slate-600" />
-              <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                Increased privacy
-              </span>
             </div>
           </div>
 
           {/* Internet */}
-          <Card className="flex flex-1 flex-col w-full">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 whitespace-nowrap">
                 Internet <GlobeLock />
               </CardTitle>
-              {/*<CardDescription></CardDescription>*/}
+              <CardDescription>
+                Bezpieczne przeglądanie stron www
+              </CardDescription>
             </CardHeader>
-            {/*<CardFooter>
+            <CardFooter>
               <CardAction>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline">ewentualne szczegóły?</Button>
+                    <Button variant="outline">Wyświetl szczegóły</Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
@@ -189,7 +190,7 @@ export default function Home() {
                   </DialogContent>
                 </Dialog>
               </CardAction>
-            </CardFooter>*/}
+            </CardFooter>
           </Card>
         </div>
       </main>
