@@ -12,3 +12,4 @@
 ## Zajęcia 2
 - [A2. Aktywności - 1](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQCHbOzHFR55SYBVrmbl967EAY2il4-Vn6fw3WyuG5iSk4s?e=wKS6Fw)
 - [A2. Aktywności - 2](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQAn2bSqxIcFTYD0vO6xO7LRAS3SfngHew0omQLxjTowAO0?e=rFOVOZ)
+- [P2. Postęp budowy demonstratora](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQCHjgN73x-kToy119yvXaJBASPC_2MayEYsey3zTgi3VME?e=rOdBRk)
