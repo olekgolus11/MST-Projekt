@@ -1,0 +1,895 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><pnml>
+    <net id="Net-One" type="P/T net">
+        <token id="Default" enabled="true" red="0" green="0" blue="0"/>
+        <place id="P0">
+            <graphics>
+                <position x="216.0" y="113.0"/>
+            </graphics>
+            <name>
+                <value>P0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P1">
+            <graphics>
+                <position x="195.0" y="272.0"/>
+            </graphics>
+            <name>
+                <value>P1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P10">
+            <graphics>
+                <position x="207.0" y="420.0"/>
+            </graphics>
+            <name>
+                <value>P10</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P11">
+            <graphics>
+                <position x="192.0" y="580.0"/>
+            </graphics>
+            <name>
+                <value>P11</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P12">
+            <graphics>
+                <position x="763.0" y="156.0"/>
+            </graphics>
+            <name>
+                <value>P12</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P13 licznik">
+            <graphics>
+                <position x="79.0" y="138.0"/>
+            </graphics>
+            <name>
+                <value>P13 licznik</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,834</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P2">
+            <graphics>
+                <position x="363.0" y="553.0"/>
+            </graphics>
+            <name>
+                <value>P2</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P3">
+            <graphics>
+                <position x="557.0" y="391.0"/>
+            </graphics>
+            <name>
+                <value>P3</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P4">
+            <graphics>
+                <position x="512.0" y="243.0"/>
+            </graphics>
+            <name>
+                <value>P4</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P5">
+            <graphics>
+                <position x="693.0" y="398.0"/>
+            </graphics>
+            <name>
+                <value>P5</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P6">
+            <graphics>
+                <position x="854.0" y="395.0"/>
+            </graphics>
+            <name>
+                <value>P6</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="P9">
+            <graphics>
+                <position x="1130.0" y="378.0"/>
+            </graphics>
+            <name>
+                <value>P9</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <transition id="Nie potwirdzaj to&#380;samo&#347;ci">
+            <graphics>
+                <position x="450.0" y="357.0"/>
+            </graphics>
+            <name>
+                <value>Nie potwirdzaj to&#380;samo&#347;ci</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Opubliku certyfikat">
+            <graphics>
+                <position x="1006.0" y="480.0"/>
+            </graphics>
+            <name>
+                <value>Opubliku certyfikat</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Podpisz certyfikat">
+            <graphics>
+                <position x="806.0" y="486.0"/>
+            </graphics>
+            <name>
+                <value>Podpisz certyfikat</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Potwird&#378; to&#380;samo&#347;&#263;">
+            <graphics>
+                <position x="497.0" y="489.0"/>
+            </graphics>
+            <name>
+                <value>Potwird&#378; to&#380;samo&#347;&#263;</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Potwird&#378; &#380;&#261;danie CSR">
+            <graphics>
+                <position x="665.0" y="486.0"/>
+            </graphics>
+            <name>
+                <value>Potwird&#378; &#380;&#261;danie CSR</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="T10">
+            <graphics>
+                <position x="445.0" y="143.0"/>
+            </graphics>
+            <name>
+                <value>T10</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="T11">
+            <graphics>
+                <position x="439.0" y="48.0"/>
+            </graphics>
+            <name>
+                <value>T11</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Wydaj certyfikat">
+            <graphics>
+                <position x="995.0" y="221.0"/>
+            </graphics>
+            <name>
+                <value>Wydaj certyfikat</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Wygeneruj CSR">
+            <graphics>
+                <position x="264.0" y="313.0"/>
+            </graphics>
+            <name>
+                <value>Wygeneruj CSR</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Wygeneruj par&#281; kluczy">
+            <graphics>
+                <position x="266.0" y="193.0"/>
+            </graphics>
+            <name>
+                <value>Wygeneruj par&#281; kluczy</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Wy&#347;lij CSR">
+            <graphics>
+                <position x="271.0" y="478.0"/>
+            </graphics>
+            <name>
+                <value>Wy&#347;lij CSR</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Zweryfikuj to&#380;samo&#347;&#263;">
+            <graphics>
+                <position x="330.0" y="636.0"/>
+            </graphics>
+            <name>
+                <value>Zweryfikuj to&#380;samo&#347;&#263;</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <arc id="Nie potwirdzaj to&#380;samo&#347;ci to P4" source="Nie potwirdzaj to&#380;samo&#347;ci" target="P4">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="462" y="354" curvePoint="false"/>
+            <arcpath id="001" x="516" y="267" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Opubliku certyfikat to P9" source="Opubliku certyfikat" target="P9">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1022" y="492" curvePoint="false"/>
+            <arcpath id="001" x="1130" y="399" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P0 to Wygeneruj par&#281; kluczy" source="P0" target="Wygeneruj par&#281; kluczy">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="235" y="137" curvePoint="false"/>
+            <arcpath id="001" x="273" y="199" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P10 to Wy&#347;lij CSR" source="P10" target="Wy&#347;lij CSR">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="230" y="442" curvePoint="false"/>
+            <arcpath id="001" x="278" y="485" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P11 to Zweryfikuj to&#380;samo&#347;&#263;" source="P11" target="Zweryfikuj to&#380;samo&#347;&#263;">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="217" y="597" curvePoint="false"/>
+            <arcpath id="001" x="336" y="648" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P12 to T11" source="P12" target="T11">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="760" y="163" curvePoint="false"/>
+            <arcpath id="001" x="455" y="60" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P1 to Wygeneruj CSR" source="P1" target="Wygeneruj CSR">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="219" y="292" curvePoint="false"/>
+            <arcpath id="001" x="270" y="325" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P2 to Nie potwirdzaj to&#380;samo&#347;ci" source="P2" target="Nie potwirdzaj to&#380;samo&#347;ci">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="381" y="551" curvePoint="false"/>
+            <arcpath id="001" x="462" y="384" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P2 to Potwird&#378; to&#380;samo&#347;&#263;" source="P2" target="Potwird&#378; to&#380;samo&#347;&#263;">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="388" y="558" curvePoint="false"/>
+            <arcpath id="001" x="503" y="501" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P3 to Potwird&#378; &#380;&#261;danie CSR" source="P3" target="Potwird&#378; &#380;&#261;danie CSR">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="579" y="413" curvePoint="false"/>
+            <arcpath id="001" x="671" y="498" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P4 to T10" source="P4" target="T10">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="516" y="242" curvePoint="false"/>
+            <arcpath id="001" x="461" y="155" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P5 to Podpisz certyfikat" source="P5" target="Podpisz certyfikat">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="716" y="419" curvePoint="false"/>
+            <arcpath id="001" x="812" y="498" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P6 to Opubliku certyfikat" source="P6" target="Opubliku certyfikat">
+            <graphics/>
+            <inscription>
+                <value>Default,2</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="878" y="414" curvePoint="false"/>
+            <arcpath id="001" x="1012" y="492" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P6 to Wydaj certyfikat" source="P6" target="Wydaj certyfikat">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="875" y="395" curvePoint="false"/>
+            <arcpath id="001" x="1001" y="238" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P9 to Wydaj certyfikat" source="P9" target="Wydaj certyfikat">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1132" y="378" curvePoint="false"/>
+            <arcpath id="001" x="1011" y="233" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Podpisz certyfikat to P6" source="Podpisz certyfikat" target="P6">
+            <graphics/>
+            <inscription>
+                <value>Default,3</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="818" y="483" curvePoint="false"/>
+            <arcpath id="001" x="858" y="419" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Potwird&#378; to&#380;samo&#347;&#263; to P3" source="Potwird&#378; to&#380;samo&#347;&#263;" target="P3">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="513" y="501" curvePoint="false"/>
+            <arcpath id="001" x="561" y="416" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Potwird&#378; &#380;&#261;danie CSR to P5" source="Potwird&#378; &#380;&#261;danie CSR" target="P5">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="677" y="483" curvePoint="false"/>
+            <arcpath id="001" x="699" y="424" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T10 to P0" source="T10" target="P0">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="451" y="155" curvePoint="false"/>
+            <arcpath id="001" x="242" y="127" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T11 to P0" source="T11" target="P0">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="445" y="60" curvePoint="false"/>
+            <arcpath id="001" x="242" y="120" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Wydaj certyfikat to P12" source="Wydaj certyfikat" target="P12">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1002" y="228" curvePoint="false"/>
+            <arcpath id="001" x="789" y="171" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Wygeneruj CSR to P10" source="Wygeneruj CSR" target="P10">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="276" y="340" curvePoint="false"/>
+            <arcpath id="001" x="226" y="419" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Wygeneruj par&#281; kluczy to P1" source="Wygeneruj par&#281; kluczy" target="P1">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="272" y="213" curvePoint="false"/>
+            <arcpath id="001" x="217" y="273" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Wygeneruj par&#281; kluczy to P13 licznik" source="Wygeneruj par&#281; kluczy" target="P13 licznik">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="272" y="206" curvePoint="false"/>
+            <arcpath id="001" x="105" y="154" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Wy&#347;lij CSR to P11" source="Wy&#347;lij CSR" target="P11">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="277" y="495" curvePoint="false"/>
+            <arcpath id="001" x="213" y="580" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Zweryfikuj to&#380;samo&#347;&#263; to P2" source="Zweryfikuj to&#380;samo&#347;&#263;" target="P2">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="342" y="633" curvePoint="false"/>
+            <arcpath id="001" x="368" y="578" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+    </net>
+</pnml>
