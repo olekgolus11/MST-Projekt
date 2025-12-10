@@ -3,6 +3,10 @@
 - [T1. PKI - Cykl życia certyfikatu, diagramy sekwencyjne](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/EbE-WmSog9xKpWpNrFL1_t0BNO6FxhAIODxyMy9zgcC44w?e=whhT7J)
 ## Zajęcia 2
 - [T2. Symulacja działania PKI](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQCcMEFP7_yaRZeMQ2_0Z63WAc2w-IwCD80miPIZo769WA0?e=RBll3G)
+## Zajęcia 3
+- [T3. Sieci Petriego](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQDeNehUP7YJQpUaL10OmMuqAczBJDPjW6BXDT8FkMHVGJ8?e=jV4KfH) (DO ZROBIENIA DO KOŃCA DNIA)
+## Zajęcia 4
+- [T4. Równoległe sieci Petriego](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQA2LfbsKGrBRpOGsgGzzAARAStGAK5GrYZW2Pj-3YRcrng?e=Qi6ECt) (do kolejnych zajęć)
 
 # Projekt
 ## Zajęcia 1
