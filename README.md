@@ -37,3 +37,7 @@
 ## Zajęcia 3
 
 - [A3. Aktywności](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQBeqZjbiU6MQ57vbwn2rUklAZjZH-0FuZA7G6u1VoKlRW8?e=1LpNYN)
+
+## Zajęcia 4
+
+- [A4. Aktywności](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQBFnzptDo_8T6ixCRlkfkzbAYaABIufpcF5MpKgu_4_KMY?e=fJ99YO)
