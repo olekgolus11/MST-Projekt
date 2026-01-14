@@ -20,6 +20,10 @@
 
 - [T5. Pipe](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQCkPaJQL1oSRJy4PnDYPVn9AZCUry5W7xUysiUHWYvBCNU?e=ZTfoBI)
 
+## Zajęcia 6
+
+- [T6. UPPAAL](https://studentwat-my.sharepoint.com/:w:/g/personal/u66567_student_wat_edu_pl/IQAt2GL7Tw6sTrULCFmGpTsiAYmfVc4nuIjxSgWqzdwKq8k?e=hIIcmn)
+
 # Projekt
 
 ## Zajęcia 1
