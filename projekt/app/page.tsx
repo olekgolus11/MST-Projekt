@@ -86,14 +86,16 @@ export default function Home() {
       </header>
 
       {/* Main Board */}
-      <main className="flex-1 relative w-full flex flex-col overflow-hidden">
+      <main className="flex-1 relative w-full flex flex-col overflow-hidden min-h-0">
         {/* Simulation Area */}
-        <div className="flex-1 w-full relative">
-          <SimulationBoard currentStep={currentStepData} />
+        <div className="flex-1 w-full relative flex items-center justify-center p-4">
+          <div className="w-full h-full max-w-7xl max-h-[800px]">
+            <SimulationBoard currentStep={currentStepData} />
+          </div>
         </div>
 
         {/* Explanation Panel - Always visible at bottom, or conditional */}
-        <div className="z-50 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border-t border-slate-200 dark:border-slate-700">
+        <div className="z-50 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border-t border-slate-200 dark:border-slate-700 shrink-0">
           {/* Navigation controls - Moved here for better UX */}
           <div className="flex items-center justify-center gap-4 py-2 border-b border-slate-200/50 dark:border-slate-700/50">
             <Button
