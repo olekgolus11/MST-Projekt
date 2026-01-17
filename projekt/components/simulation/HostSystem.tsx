@@ -87,7 +87,7 @@ export const HostSystem: React.FC<HostSystemProps> = ({
         <div className="flex-none h-16">
           <Box
             id={appId}
-            label={isClient ? "Aplikacja" : "Internet"}
+            label={isClient ? "Aplikacja (Przeglądarka)" : "Internet Docelowy"}
             icon={isClient ? Globe : Globe}
             className="h-full w-full"
           />
@@ -120,7 +120,7 @@ export const HostSystem: React.FC<HostSystemProps> = ({
               <div className="flex flex-col justify-center">
                 <Box
                   id={isClient ? "routing" : natId}
-                  label={isClient ? "Routing" : "NAT"}
+                  label={isClient ? "Routing Table" : "NAT (Maskarada)"}
                   icon={Layers}
                   className="h-full w-full"
                 />
@@ -130,7 +130,7 @@ export const HostSystem: React.FC<HostSystemProps> = ({
               <div className="flex flex-col gap-2 h-full">
                 <Box
                   id={tunId}
-                  label="TUN0"
+                  label="Interfejs TUN (Virtual)"
                   icon={FileText}
                   className="flex-1 w-full border-blue-200 dark:border-blue-900"
                 >
@@ -140,12 +140,12 @@ export const HostSystem: React.FC<HostSystemProps> = ({
                 </Box>
                 <Box
                   id={nicId}
-                  label="ETH0"
+                  label="Karta Fizyczna (NIC)"
                   icon={Network}
                   className="flex-1 w-full border-emerald-200 dark:border-emerald-900"
                 >
                   <div className="text-[9px] text-slate-400 text-center hidden sm:block">
-                    {isClient ? "WIFI" : "Public IP"}
+                    {isClient ? "ETH0 / WIFI" : "ETH0 (Public IP)"}
                   </div>
                 </Box>
               </div>
@@ -157,7 +157,9 @@ export const HostSystem: React.FC<HostSystemProps> = ({
         <div className="flex-none h-20 mt-1 mx-4">
           <Box
             id={vpnId}
-            label={isClient ? "OpenVPN Client" : "OpenVPN Server"}
+            label={
+              isClient ? "Proces OpenVPN (Klient)" : "Proces OpenVPN (Serwer)"
+            }
             icon={Shield}
             className={`h-full w-full border-2 ${isActive(vpnId) ? "border-blue-500" : "border-slate-300"}`}
           >
