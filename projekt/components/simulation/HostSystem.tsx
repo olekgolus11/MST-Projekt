@@ -49,7 +49,7 @@ export const HostSystem: React.FC<HostSystemProps> = ({
   }) => (
     <div
       className={`
-        relative p-3 rounded-lg border-2 transition-all duration-300 flex flex-col items-center gap-2
+        relative p-2 rounded-lg border-2 transition-all duration-300 flex flex-col items-center gap-1 justify-center
         ${
           isActive(id)
             ? "border-amber-500 bg-amber-50/50 dark:bg-amber-900/10 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
@@ -58,8 +58,8 @@ export const HostSystem: React.FC<HostSystemProps> = ({
         ${className}
       `}
     >
-      <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
-        <Icon className="h-4 w-4" />
+      <div className="flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-slate-300 text-center leading-tight">
+        <Icon className="h-3 w-3 shrink-0" />
         {label}
       </div>
       {children}
@@ -68,41 +68,42 @@ export const HostSystem: React.FC<HostSystemProps> = ({
 
   return (
     <Card
-      className={`h-full border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm ${
+      className={`h-full border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm flex flex-col overflow-hidden ${
         isClient ? "rounded-r-none border-r-0" : "rounded-l-none border-l-0"
       }`}
     >
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-lg">
+      <CardHeader className="pb-2 px-4 py-3 shrink-0">
+        <CardTitle className="flex items-center gap-2 text-base">
           {isClient ? (
-            <Monitor className="h-5 w-5" />
+            <Monitor className="h-4 w-4" />
           ) : (
-            <Server className="h-5 w-5" />
+            <Server className="h-4 w-4" />
           )}
           {isClient ? "Host Użytkownika" : "Serwer VPN & Internet"}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4 h-[calc(100%-4rem)] p-4">
+      <CardContent className="flex-1 flex flex-col gap-2 p-3 min-h-0">
         {/* Layer 1: Application / Internet Destination */}
-        <div className="flex-1 min-h-[80px]">
+        <div className="flex-none h-16">
           <Box
             id={appId}
-            label={isClient ? "Aplikacja (Przeglądarka)" : "Internet Docelowy"}
+            label={isClient ? "Aplikacja" : "Internet"}
             icon={isClient ? Globe : Globe}
-            className="h-full w-full justify-center"
+            className="h-full w-full"
           />
         </div>
 
         {/* Arrow Connector */}
-        <div className="flex justify-center text-slate-400">
-          <ArrowDown className="h-5 w-5 animate-bounce opacity-20" />
+        <div className="flex justify-center text-slate-400 shrink-0 h-4">
+          <ArrowDown className="h-4 w-4 animate-bounce opacity-20" />
         </div>
 
         {/* Layer 2: OS Kernel Space */}
-        <div className="flex-[2] relative">
+        <div className="flex-1 relative min-h-0">
           <div
             className={`
-            absolute inset-0 border-2 border-dashed rounded-xl p-4
+            w-full h-full border-2 border-dashed rounded-xl p-2 pt-4
+            flex flex-col
             ${
               isActive(osId)
                 ? "border-indigo-400 bg-indigo-50/30 dark:bg-indigo-900/10"
@@ -110,41 +111,41 @@ export const HostSystem: React.FC<HostSystemProps> = ({
             }
           `}
           >
-            <span className="absolute -top-3 left-4 bg-white dark:bg-slate-950 px-2 text-xs font-mono text-slate-500">
-              KERNEL SPACE (Jądro Systemu)
+            <span className="absolute -top-2.5 left-4 bg-white dark:bg-slate-950 px-2 text-[10px] font-mono text-slate-500 uppercase tracking-wider border rounded-full">
+              Kernel Space
             </span>
 
-            <div className="grid grid-cols-2 gap-4 h-full pt-2">
+            <div className="grid grid-cols-2 gap-2 flex-1 min-h-0">
               {/* Left Column: Network Stack / Routing */}
-              <div className="flex flex-col gap-4 justify-center">
+              <div className="flex flex-col justify-center">
                 <Box
                   id={isClient ? "routing" : natId}
-                  label={isClient ? "Routing Table" : "NAT (Maskarada)"}
+                  label={isClient ? "Routing" : "NAT"}
                   icon={Layers}
-                  className="flex-1 justify-center"
+                  className="h-full w-full"
                 />
               </div>
 
               {/* Right Column: Interfaces */}
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2 h-full">
                 <Box
                   id={tunId}
-                  label="Interfejs TUN (Virtual)"
+                  label="TUN0"
                   icon={FileText}
-                  className="flex-1 justify-center border-blue-200 dark:border-blue-900"
+                  className="flex-1 w-full border-blue-200 dark:border-blue-900"
                 >
-                  <div className="text-[10px] text-slate-400 text-center">
-                    IP: 10.8.0.{isClient ? "2" : "1"}
+                  <div className="text-[9px] text-slate-400 text-center hidden sm:block">
+                    10.8.0.{isClient ? "2" : "1"}
                   </div>
                 </Box>
                 <Box
                   id={nicId}
-                  label="Karta Fizyczna (NIC)"
+                  label="ETH0"
                   icon={Network}
-                  className="flex-1 justify-center border-emerald-200 dark:border-emerald-900"
+                  className="flex-1 w-full border-emerald-200 dark:border-emerald-900"
                 >
-                  <div className="text-[10px] text-slate-400 text-center">
-                    {isClient ? "ETH0 / WIFI" : "ETH0 (Public IP)"}
+                  <div className="text-[9px] text-slate-400 text-center hidden sm:block">
+                    {isClient ? "WIFI" : "Public IP"}
                   </div>
                 </Box>
               </div>
@@ -153,23 +154,19 @@ export const HostSystem: React.FC<HostSystemProps> = ({
         </div>
 
         {/* Layer 3: User Space VPN Process */}
-        {/* We position this alongside Kernel in a real layout, but visually stacking or placing beside is tricky. 
-            For this vertical flow, let's put it "floating" or integrated nicely. */}
-        <div className="flex-1 min-h-[100px] mt-4 ml-8 mr-8">
+        <div className="flex-none h-20 mt-1 mx-4">
           <Box
             id={vpnId}
-            label={
-              isClient ? "Proces OpenVPN (Klient)" : "Proces OpenVPN (Serwer)"
-            }
+            label={isClient ? "OpenVPN Client" : "OpenVPN Server"}
             icon={Shield}
-            className={`h-full justify-center border-2 ${isActive(vpnId) ? "border-blue-500" : "border-slate-300"}`}
+            className={`h-full w-full border-2 ${isActive(vpnId) ? "border-blue-500" : "border-slate-300"}`}
           >
-            <div className="flex gap-2 text-xs text-slate-500">
-              <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded">
+            <div className="flex gap-1 text-[9px] text-slate-500 flex-wrap justify-center">
+              <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded">
                 OpenSSL
               </span>
-              <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded">
-                UDP Socket
+              <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded">
+                UDP
               </span>
             </div>
           </Box>
