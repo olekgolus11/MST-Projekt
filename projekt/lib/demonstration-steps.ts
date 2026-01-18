@@ -4,6 +4,22 @@ export interface Step {
   explanation: string;
   technicalDetails: string;
   activeElements: string[];
+  packetLocation?:
+    | "start"
+    | "app"
+    | "os-stack"
+    | "tun"
+    | "vpn-client-read"
+    | "vpn-client-encrypt"
+    | "nic-out"
+    | "tunnel"
+    | "server-nic-in"
+    | "server-vpn-process"
+    | "server-tun"
+    | "server-nat"
+    | "target-internet"
+    | "return-path";
+  packetStatus?: "none" | "raw" | "encrypted";
 }
 
 export const demonstrationSteps: Step[] = [
@@ -11,78 +27,121 @@ export const demonstrationSteps: Step[] = [
     id: 0,
     title: "Stan początkowy",
     explanation:
-      "Witaj w symulacji protokołu OpenVPN! Kliknij przycisk 'Dalej' aby rozpocząć demonstrację działania protokołu VPN. Zobaczysz jak dane są szyfrowane i przesyłane przez bezpieczny tunel.",
+      "Symulacja szczegółowa. Widzimy wnętrze hosta: aplikację użytkownika, system operacyjny z interfejsem wirtualnym (TUN) oraz proces klienta VPN.",
     technicalDetails:
-      "OpenVPN to protokół VPN typu open-source, który wykorzystuje bibliotekę OpenSSL do szyfrowania. Domyślnie działa na porcie UDP 1194, ale może również używać TCP.",
-    activeElements: [],
+      "W systemie zainstalowany jest sterownik TAP/TUN. Interfejs TUN (tun0) działa w warstwie 3 (IP) i symuluje fizyczną kartę sieciową, ale zamiast wysyłać prąd do kabla, przekazuje dane do programu (OpenVPN).",
+    activeElements: ["client-host", "server-host"],
+    packetLocation: "start",
+    packetStatus: "none",
   },
   {
     id: 1,
-    title: "Użytkownik inicjuje połączenie",
+    title: "Generowanie pakietu (Aplikacja)",
     explanation:
-      "Użytkownik chce bezpiecznie połączyć się z internetem. Uruchamia klienta OpenVPN na swoim urządzeniu, aby nawiązać szyfrowane połączenie z serwerem VPN.",
+      "Użytkownik wpisuje adres w przeglądarce. Aplikacja tworzy standardowe żądanie sieciowe.",
     technicalDetails:
-      "Klient OpenVPN ładuje plik konfiguracyjny (.ovpn) zawierający: adres serwera, port, protokół (UDP/TCP), certyfikaty CA, oraz klucze szyfrowania.",
-    activeElements: ["client"],
+      "Aplikacja (np. przeglądarka) używa wywołania systemowego socket() i sendto(). Tworzony jest pakiet z docelowym adresem IP (np. 142.250.x.x dla Google).",
+    activeElements: ["client-app"],
+    packetLocation: "app",
+    packetStatus: "raw",
   },
   {
     id: 2,
-    title: "Klient VPN aktywowany",
+    title: "Routing systemowy (Kernel)",
     explanation:
-      "Klient OpenVPN został uruchomiony i jest gotowy do nawiązania bezpiecznego połączenia. Rozpoczyna się proces uzgadniania połączenia (handshake) z serwerem VPN.",
+      "System operacyjny sprawdza tablicę routingu. Domyślna trasa (default gateway) została zmieniona przez VPN, aby kierować ruch na interfejs wirtualny.",
     technicalDetails:
-      "Klient inicjuje połączenie TLS 1.2/1.3. Wysyła pakiet Client Hello zawierający: wersję protokołu, obsługiwane szyfry (np. AES-256-GCM), losowy numer sesji.",
-    activeElements: ["client", "vpn-client"],
+      "Kernel sprawdza tablicę routingu (route print / ip route). Widzi, że ruch 0.0.0.0/0 lub specyficzna podsieć ma być kierowana do interfejsu 'tun0'.",
+    activeElements: ["client-os", "client-tun"],
+    packetLocation: "os-stack",
+    packetStatus: "raw",
   },
   {
     id: 3,
-    title: "Ustanawianie tunelu TLS",
+    title: "Przekazanie do interfejsu TUN",
     explanation:
-      "Następuje wymiana kluczy między klientem a serwerem VPN. Obie strony weryfikują swoje certyfikaty i uzgadniają wspólny klucz szyfrowania dla sesji.",
+      "Pakiet trafia do wirtualnej karty sieciowej TUN. Dla systemu wygląda to jak wysłanie do sieci, ale 'kabel' jest podłączony do procesu VPN.",
     technicalDetails:
-      "Handshake TLS:\n1. Server Hello + Certyfikat serwera\n2. Weryfikacja certyfikatu przez klienta\n3. Wymiana kluczy (ECDHE)\n4. Generowanie kluczy sesji\n5. Finished - tunel gotowy",
-    activeElements: ["vpn-client", "vpn-tunnel"],
+      "Interfejs TUN odbiera ramkę IP. Zamiast wysłać ją w eter, jądro systemu przekazuje dane do deskryptora pliku (/dev/net/tun), który jest otwarty przez proces OpenVPN.",
+    activeElements: ["client-tun"],
+    packetLocation: "tun",
+    packetStatus: "raw",
   },
   {
     id: 4,
-    title: "Tunel VPN aktywny",
+    title: "Odczyt przez Klienta VPN (User Space)",
     explanation:
-      "Bezpieczny tunel został ustanowiony! Wszystkie dane przesyłane między klientem a serwerem VPN są teraz szyfrowane. Zewnętrzni obserwatorzy widzą tylko zaszyfrowany ruch.",
+      "Proces OpenVPN 'nasłuchuje' na interfejsie TUN. Odbiera niezaszyfrowany pakiet z jądra systemu.",
     technicalDetails:
-      "Dane są enkapsulowane:\n[Nagłówek IP] → [Nagłówek UDP/1194] → [OpenVPN Header] → [Zaszyfrowane dane TLS]\n\nSzyfrowanie: AES-256-GCM\nHMAC: SHA256",
-    activeElements: ["vpn-client", "vpn-tunnel", "vpn-server"],
+      "Proces OpenVPN wykonuje operację read() na deskryptorze pliku TUN. Otrzymuje czysty pakiet IP jako payload.",
+    activeElements: ["client-vpn-process"],
+    packetLocation: "vpn-client-read",
+    packetStatus: "raw",
   },
   {
     id: 5,
-    title: "Serwer VPN odbiera dane",
+    title: "Enkrypcja i Enkapsulacja",
     explanation:
-      "Serwer VPN odbiera zaszyfrowane pakiety, odszyfrowuje je i przekazuje do internetu. Dla serwisów internetowych, ruch wygląda jakby pochodził z serwera VPN, nie od użytkownika.",
+      "Kluczowy moment: OpenVPN szyfruje odebrany pakiet i pakuje go w nowy 'kopertę' (nowy pakiet).",
     technicalDetails:
-      "Serwer VPN:\n1. Odbiera pakiet UDP na porcie 1194\n2. Odszyfrowuje dane kluczem sesji\n3. Wyciąga oryginalny pakiet IP\n4. Wykonuje NAT (zamienia źródłowe IP)\n5. Przekazuje do internetu",
-    activeElements: ["vpn-tunnel", "vpn-server"],
+      "OpenSSL szyfruje payload (AES-256-GCM). Zaszyfrowany blok staje się danymi nowego pakietu UDP. Dodawane są nagłówki OpenVPN oraz nowy nagłówek IP (źródło: IP fizyczne klienta, cel: IP serwera VPN).",
+    activeElements: ["client-vpn-process"],
+    packetLocation: "vpn-client-encrypt",
+    packetStatus: "encrypted",
   },
   {
     id: 6,
-    title: "Żądanie wysłane do Internetu",
+    title: "Wysłanie do fizycznej karty (NIC)",
     explanation:
-      "Odszyfrowane żądanie jest wysyłane do docelowego serwera w internecie. Serwer docelowy widzi tylko adres IP serwera VPN - prawdziwy adres użytkownika jest ukryty.",
+      "Zaszyfrowany pakiet jest wysyłany przez 'prawdziwą' kartę sieciową (WiFi/Ethernet) do Internetu.",
     technicalDetails:
-      "Pakiet wychodzący do internetu:\nŹródłowe IP: 185.xxx.xxx.xxx (serwer VPN)\nDocelowe IP: 142.250.185.78 (np. google.com)\n\nTwoje prawdziwe IP jest całkowicie ukryte!",
-    activeElements: ["vpn-server", "internet"],
+      "Proces OpenVPN używa standardowego gniazda sieciowego (socket) do wysłania zaszyfrowanego pakietu UDP na adres publiczny serwera VPN. Pakiet przechodzi przez fizyczny interfejs (np. eth0/wlan0).",
+    activeElements: ["client-os", "client-nic"],
+    packetLocation: "nic-out",
+    packetStatus: "encrypted",
   },
   {
     id: 7,
-    title: "Odpowiedź wraca przez tunel",
+    title: "Tunel VPN (Internet)",
     explanation:
-      "Serwer internetowy wysyła odpowiedź do serwera VPN. Serwer VPN szyfruje odpowiedź i przesyła ją z powrotem do klienta przez bezpieczny tunel.",
+      "Pakiet podróżuje przez publiczny Internet. Dla obserwatorów (dostawca internetu, hakerzy) wygląda to jak bełkotliwy strumień danych UDP.",
     technicalDetails:
-      "Droga powrotna:\n1. Internet → Serwer VPN (nieszyfrowane)\n2. Serwer szyfruje odpowiedź\n3. Przesyła przez tunel do klienta\n4. Klient odszyfrowuje\n5. Dane trafiają do aplikacji",
-    activeElements: [
-      "internet",
-      "vpn-server",
-      "vpn-tunnel",
-      "vpn-client",
-      "client",
-    ],
+      "Dostawca ISP widzi tylko pakiety UDP płynące między Twoim IP a IP serwera VPN. Nie widzi co jest w środku (np. że to żądanie HTTP do Google).",
+    activeElements: ["internet-tunnel"],
+    packetLocation: "tunnel",
+    packetStatus: "encrypted",
+  },
+  {
+    id: 8,
+    title: "Odbiór przez Serwer VPN",
+    explanation:
+      "Serwer VPN odbiera pakiet na swoim fizycznym interfejsie i przekazuje go do swojego procesu OpenVPN.",
+    technicalDetails:
+      "Pakiet dociera do portu 1194 UDP na serwerze. Proces serwera OpenVPN odbiera go z gniazda sieciowego.",
+    activeElements: ["server-os", "server-nic"],
+    packetLocation: "server-nic-in",
+    packetStatus: "encrypted",
+  },
+  {
+    id: 9,
+    title: "Dekrypcja i Routing na Serwerze",
+    explanation:
+      "Serwer odszyfrowuje pakiet, odzyskując oryginalne żądanie. Następnie kieruje je do Internetu.",
+    technicalDetails:
+      "OpenVPN odszyfrowuje payload, uzyskując oryginalny pakiet IP. Zapisuje go do swojego interfejsu TUN. Jądro serwera odbiera pakiet, wykonuje SNAT (Source NAT - maskarada), zmieniając adres źródłowy na własne publiczne IP.",
+    activeElements: ["server-vpn-process"],
+    packetLocation: "server-vpn-process",
+    packetStatus: "raw",
+  },
+  {
+    id: 10,
+    title: "Dotarcie do celu",
+    explanation:
+      "Oryginalne (odszyfrowane) żądanie dociera do serwera docelowego (np. strony www).",
+    technicalDetails:
+      "Serwer docelowy widzi połączenie przychodzące z adresu IP serwera VPN, a nie oryginalnego klienta.",
+    activeElements: ["target-internet"],
+    packetLocation: "target-internet",
+    packetStatus: "raw",
   },
 ];
