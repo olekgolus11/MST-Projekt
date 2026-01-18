@@ -96,7 +96,7 @@ export const demonstrationSteps: Step[] = [
       "Zaszyfrowany pakiet jest wysyłany przez 'prawdziwą' kartę sieciową (WiFi/Ethernet) do Internetu.",
     technicalDetails:
       "Proces OpenVPN używa standardowego gniazda sieciowego (socket) do wysłania zaszyfrowanego pakietu UDP na adres publiczny serwera VPN. Pakiet przechodzi przez fizyczny interfejs (np. eth0/wlan0).",
-    activeElements: ["client-nic"],
+    activeElements: ["client-os", "client-nic"],
     packetLocation: "nic-out",
     packetStatus: "encrypted",
   },

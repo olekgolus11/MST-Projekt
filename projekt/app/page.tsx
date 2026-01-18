@@ -7,7 +7,7 @@ import {
   Play,
   RotateCcw,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { SimulationBoard } from "@/components/simulation/SimulationBoard";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,26 @@ export default function Home() {
 
   const currentStepData = demonstrationSteps[currentStep];
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isPlaying) {
+      interval = setInterval(() => {
+        if (currentStep < demonstrationSteps.length - 1) {
+          setCurrentStep((prev) => prev + 1);
+        } else {
+          setIsPlaying(false);
+        }
+      }, 3000);
+    }
+
+    return () => clearInterval(interval);
+  }, [isPlaying, currentStep]);
+
   const handlePlay = () => {
+    if (currentStep === demonstrationSteps.length - 1) {
+      setCurrentStep(0);
+    }
     setIsPlaying(true);
   };
 
