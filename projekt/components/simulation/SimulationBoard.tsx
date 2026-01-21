@@ -75,7 +75,7 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
       <div className="w-[16%] flex flex-col items-center justify-center z-0 relative">
         <div
           className={`
-          absolute inset-x-0 h-16 border-y-2 border-dashed flex items-center justify-center
+          absolute inset-x-0 h-20 border-y-2 border-dashed flex flex-col items-center justify-center gap-1
           transition-colors duration-500
           ${
             activeElements.includes("internet-tunnel")
@@ -83,10 +83,13 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
               : "border-slate-300 dark:border-slate-700"
           }
         `}
-          style={{ top: "60%" }}
+          style={{ top: "58%" }}
         >
           <span className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-white dark:bg-slate-900 px-2">
-            Internet (Public)
+            Internet
+          </span>
+          <span className="text-[9px] font-mono text-slate-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+            UDP:1194
           </span>
         </div>
       </div>

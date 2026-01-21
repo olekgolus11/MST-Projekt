@@ -90,7 +90,13 @@ export const HostSystem: React.FC<HostSystemProps> = ({
             label={isClient ? "Aplikacja (Przeglądarka)" : "Internet Docelowy"}
             icon={isClient ? Globe : Globe}
             className="h-full w-full"
-          />
+          >
+            {!isClient && (
+              <div className="text-[9px] text-slate-400 text-center font-mono">
+                142.250.185.78:443
+              </div>
+            )}
+          </Box>
         </div>
 
         {/* Arrow Connector */}
@@ -134,9 +140,9 @@ export const HostSystem: React.FC<HostSystemProps> = ({
                   icon={FileText}
                   className="flex-1 w-full border-blue-200 dark:border-blue-900"
                 >
-                  <div className="text-[9px] text-slate-400 text-center hidden sm:block">
+                   <div className="text-[9px] text-slate-400 text-center font-mono">
                     10.8.0.{isClient ? "2" : "1"}
-                  </div>
+                   </div>
                 </Box>
                 <Box
                   id={nicId}
@@ -144,8 +150,8 @@ export const HostSystem: React.FC<HostSystemProps> = ({
                   icon={Network}
                   className="flex-1 w-full border-emerald-200 dark:border-emerald-900"
                 >
-                  <div className="text-[9px] text-slate-400 text-center hidden sm:block">
-                    {isClient ? "ETH0 / WIFI" : "ETH0 (Public IP)"}
+                  <div className="text-[9px] text-slate-400 text-center font-mono">
+                    {isClient ? "192.168.1.100" : "185.245.12.34"}
                   </div>
                 </Box>
               </div>
@@ -164,11 +170,11 @@ export const HostSystem: React.FC<HostSystemProps> = ({
             className={`h-full w-full border-2 ${isActive(vpnId) ? "border-blue-500" : "border-slate-300"}`}
           >
             <div className="flex gap-1 text-[9px] text-slate-500 flex-wrap justify-center">
-              <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded">
-                OpenSSL
+              <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded font-mono">
+                UDP:1194
               </span>
               <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded">
-                UDP
+                OpenSSL
               </span>
             </div>
           </Box>
