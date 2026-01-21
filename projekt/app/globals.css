@@ -133,3 +133,18 @@ body {
         @apply bg-background text-foreground;
     }
 }
+
+.packet-animate {
+    animation: packet-move var(--packet-duration, 1.6s) ease-in-out forwards;
+}
+
+@keyframes packet-move {
+    from {
+        left: calc(var(--from-x) * 1%);
+        top: calc(var(--from-y) * 1%);
+    }
+    to {
+        left: calc(var(--to-x) * 1%);
+        top: calc(var(--to-y) * 1%);
+    }
+}

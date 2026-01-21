@@ -16,8 +16,8 @@ const COORDINATES: Record<string, { x: number; y: number }> = {
   "vpn-client-encrypt": { x: 21, y: 85 },
   "nic-out": { x: 30, y: 65 },
   tunnel: { x: 50, y: 50 },
-  "control-tunnel": { x: 50, y: 55 },
-  "data-tunnel": { x: 50, y: 65 },
+  "control-tunnel": { x: 50, y: 50 },
+  "data-tunnel": { x: 50, y: 78 },
   "server-nic-in": { x: 88, y: 65 },
   "server-vpn-process": { x: 79, y: 85 },
   "server-tun": { x: 88, y: 45 },
@@ -33,8 +33,20 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
   const packetStatus = currentStep.packetStatus || "none";
   const packetLabel = currentStep.packetLabel || "DATA";
   const packetPos = COORDINATES[packetLocation] || COORDINATES["start"];
-  const isControlActive = activeElements.includes("control-tunnel");
-  const isDataActive = activeElements.includes("data-tunnel");
+  const packetFromKey = currentStep.packetFrom || packetLocation;
+  const packetToKey = currentStep.packetTo || packetLocation;
+  const packetFrom = COORDINATES[packetFromKey] || COORDINATES["start"];
+  const packetTo = COORDINATES[packetToKey] || COORDINATES["start"];
+  const packetPathKeys = currentStep.packetPath;
+  const packetPath = packetPathKeys
+    ? packetPathKeys.map((key) => {
+        const safeKey = (key ?? "start") as keyof typeof COORDINATES;
+        return COORDINATES[safeKey] || COORDINATES["start"];
+      })
+    : [packetFrom, packetTo];
+  const highlightKeys = packetPathKeys ?? [packetFromKey, packetToKey];
+  const isControlActive = highlightKeys.includes("control-tunnel");
+  const isDataActive = highlightKeys.includes("data-tunnel");
 
   return (
     <div className="relative w-full h-full flex items-stretch p-4 gap-0">
@@ -61,9 +73,9 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
         {/* Control tunnel line */}
         <line
           x1="30%"
-          y1="55%"
+          y1="50%"
           x2="70%"
-          y2="55%"
+          y2="50%"
           stroke="currentColor"
           strokeWidth="4"
           strokeDasharray="8 8"
@@ -76,9 +88,9 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
         {/* Data tunnel line */}
         <line
           x1="30%"
-          y1="65%"
+          y1="78%"
           x2="70%"
-          y2="65%"
+          y2="78%"
           stroke="currentColor"
           strokeWidth="4"
           strokeDasharray="8 8"
@@ -99,40 +111,47 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
       <div className="w-[16%] flex flex-col items-center justify-center z-0 relative">
         <div
           className={`
-          absolute inset-x-0 h-24 border-y-2 border-dashed flex flex-col items-center justify-center gap-2
-          transition-colors duration-500
+          absolute inset-x-0 h-16 border-y-2 border-dashed transition-colors duration-500
           ${
-            isControlActive || isDataActive
+            isControlActive
               ? "bg-blue-50/40 dark:bg-blue-900/10 border-blue-400"
               : "border-slate-300 dark:border-slate-700"
           }
         `}
-          style={{ top: "54%" }}
+          style={{ top: "44%" }}
+        />
+        <div
+          className={`
+          absolute inset-x-0 h-16 border-y-2 border-dashed transition-colors duration-500
+          ${
+            isDataActive
+              ? "bg-amber-50/40 dark:bg-amber-900/10 border-amber-400"
+              : "border-slate-300 dark:border-slate-700"
+          }
+        `}
+          style={{ top: "70%" }}
+        />
+        <span className="absolute left-1/2 top-[38%] -translate-x-1/2 text-xs font-bold text-slate-400 uppercase tracking-widest bg-white dark:bg-slate-900 px-2">
+          Internet
+        </span>
+        <span
+          className={`absolute left-1/2 top-[50%] -translate-x-1/2 text-[11px] font-mono px-2.5 py-1 rounded border ${
+            isControlActive
+              ? "text-blue-600 border-blue-200 bg-blue-50"
+              : "text-slate-400 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
+          }`}
         >
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-white dark:bg-slate-900 px-2">
-            Internet
-          </span>
-          <div className="flex flex-col items-center gap-1">
-            <span
-              className={`text-[9px] font-mono px-2 py-0.5 rounded border ${
-                isControlActive
-                  ? "text-blue-600 border-blue-200 bg-blue-50"
-                  : "text-slate-400 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-              }`}
-            >
-              Control Tunnel (TLS)
-            </span>
-            <span
-              className={`text-[9px] font-mono px-2 py-0.5 rounded border ${
-                isDataActive
-                  ? "text-amber-600 border-amber-200 bg-amber-50"
-                  : "text-slate-400 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-              }`}
-            >
-              Data Tunnel (UDP:1194)
-            </span>
-          </div>
-        </div>
+          Control Tunnel (TLS)
+        </span>
+        <span
+          className={`absolute left-1/2 top-[78%] -translate-x-1/2 text-[11px] font-mono px-2.5 py-1 rounded border ${
+            isDataActive
+              ? "text-amber-600 border-amber-200 bg-amber-50"
+              : "text-slate-400 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
+          }`}
+        >
+          Data Tunnel (UDP:1194)
+        </span>
       </div>
 
       {/* Server Host Area */}
@@ -141,7 +160,13 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
       </div>
 
       {/* The Moving Packet */}
-      <Packet status={packetStatus} position={packetPos} label={packetLabel} />
+      <Packet
+        key={`${currentStep.id}-${packetFromKey}-${packetToKey}-${packetStatus}-${highlightKeys.join("-")}`}
+        status={packetStatus}
+        path={packetPath}
+        fallbackPosition={packetPos}
+        label={packetLabel}
+      />
     </div>
   );
 };

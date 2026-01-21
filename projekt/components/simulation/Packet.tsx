@@ -1,21 +1,53 @@
 import { FileText, Lock } from "lucide-react";
 import type React from "react";
+import { useEffect, useRef } from "react";
 
 interface PacketProps {
   status: "raw" | "encrypted" | "none";
-  position: { x: number; y: number };
+  path: { x: number; y: number }[];
+  fallbackPosition: { x: number; y: number };
   label?: string;
 }
 
-export const Packet: React.FC<PacketProps> = ({ status, position, label }) => {
+export const Packet: React.FC<PacketProps> = ({
+  status,
+  path,
+  fallbackPosition,
+  label,
+}) => {
   if (status === "none") return null;
+
+  const packetRef = useRef<HTMLDivElement | null>(null);
+  const hasPath = path.length > 1;
+  const safePath = path.length > 0 ? path : [fallbackPosition];
+  const startPoint = safePath[0];
+
+  useEffect(() => {
+    if (!packetRef.current || !hasPath) return;
+
+    const frames = safePath.map((point) => ({
+      left: `${point.x}%`,
+      top: `${point.y}%`,
+    }));
+
+    const duration = Math.max(900, 700 * (safePath.length - 1));
+
+    const animation = packetRef.current.animate(frames, {
+      duration,
+      easing: "ease-in-out",
+      fill: "forwards",
+    });
+
+    return () => animation.cancel();
+  }, [hasPath, safePath]);
 
   return (
     <div
-      className="absolute z-50 transition-all duration-700 ease-in-out flex flex-col items-center justify-center"
+      ref={packetRef}
+      className="absolute z-50 flex flex-col items-center justify-center transition-all duration-700 ease-in-out"
       style={{
-        left: `${position.x}%`,
-        top: `${position.y}%`,
+        left: `${startPoint.x}%`,
+        top: `${startPoint.y}%`,
         transform: "translate(-50%, -50%)",
       }}
     >
