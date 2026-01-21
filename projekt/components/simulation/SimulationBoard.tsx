@@ -16,6 +16,8 @@ const COORDINATES: Record<string, { x: number; y: number }> = {
   "vpn-client-encrypt": { x: 21, y: 85 },
   "nic-out": { x: 30, y: 65 },
   tunnel: { x: 50, y: 50 },
+  "control-tunnel": { x: 50, y: 55 },
+  "data-tunnel": { x: 50, y: 65 },
   "server-nic-in": { x: 88, y: 65 },
   "server-vpn-process": { x: 79, y: 85 },
   "server-tun": { x: 88, y: 45 },
@@ -29,7 +31,10 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
   const activeElements = currentStep.activeElements;
   const packetLocation = currentStep.packetLocation || "start";
   const packetStatus = currentStep.packetStatus || "none";
+  const packetLabel = currentStep.packetLabel || "DATA";
   const packetPos = COORDINATES[packetLocation] || COORDINATES["start"];
+  const isControlActive = activeElements.includes("control-tunnel");
+  const isDataActive = activeElements.includes("data-tunnel");
 
   return (
     <div className="relative w-full h-full flex items-stretch p-4 gap-0">
@@ -53,7 +58,22 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
             />
           </pattern>
         </defs>
-        {/* Draw a line representing the tunnel */}
+        {/* Control tunnel line */}
+        <line
+          x1="30%"
+          y1="55%"
+          x2="70%"
+          y2="55%"
+          stroke="currentColor"
+          strokeWidth="4"
+          strokeDasharray="8 8"
+          className={`${
+            isControlActive
+              ? "text-blue-400"
+              : "text-slate-300 dark:text-slate-700"
+          } opacity-60`}
+        />
+        {/* Data tunnel line */}
         <line
           x1="30%"
           y1="65%"
@@ -62,7 +82,11 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
           stroke="currentColor"
           strokeWidth="4"
           strokeDasharray="8 8"
-          className="text-slate-300 dark:text-slate-700 opacity-50"
+          className={`${
+            isDataActive
+              ? "text-amber-400"
+              : "text-slate-300 dark:text-slate-700"
+          } opacity-60`}
         />
       </svg>
 
@@ -75,22 +99,39 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
       <div className="w-[16%] flex flex-col items-center justify-center z-0 relative">
         <div
           className={`
-          absolute inset-x-0 h-20 border-y-2 border-dashed flex flex-col items-center justify-center gap-1
+          absolute inset-x-0 h-24 border-y-2 border-dashed flex flex-col items-center justify-center gap-2
           transition-colors duration-500
           ${
-            activeElements.includes("internet-tunnel")
-              ? "bg-blue-50/50 dark:bg-blue-900/10 border-blue-400"
+            isControlActive || isDataActive
+              ? "bg-blue-50/40 dark:bg-blue-900/10 border-blue-400"
               : "border-slate-300 dark:border-slate-700"
           }
         `}
-          style={{ top: "58%" }}
+          style={{ top: "54%" }}
         >
           <span className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-white dark:bg-slate-900 px-2">
             Internet
           </span>
-          <span className="text-[9px] font-mono text-slate-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
-            UDP:1194
-          </span>
+          <div className="flex flex-col items-center gap-1">
+            <span
+              className={`text-[9px] font-mono px-2 py-0.5 rounded border ${
+                isControlActive
+                  ? "text-blue-600 border-blue-200 bg-blue-50"
+                  : "text-slate-400 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
+              }`}
+            >
+              Control Tunnel (TLS)
+            </span>
+            <span
+              className={`text-[9px] font-mono px-2 py-0.5 rounded border ${
+                isDataActive
+                  ? "text-amber-600 border-amber-200 bg-amber-50"
+                  : "text-slate-400 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
+              }`}
+            >
+              Data Tunnel (UDP:1194)
+            </span>
+          </div>
         </div>
       </div>
 
@@ -100,7 +141,7 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
       </div>
 
       {/* The Moving Packet */}
-      <Packet status={packetStatus} position={packetPos} label="DATA" />
+      <Packet status={packetStatus} position={packetPos} label={packetLabel} />
     </div>
   );
 };

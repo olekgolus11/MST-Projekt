@@ -13,6 +13,8 @@ export interface Step {
     | "vpn-client-encrypt"
     | "nic-out"
     | "tunnel"
+    | "control-tunnel"
+    | "data-tunnel"
     | "server-nic-in"
     | "server-vpn-process"
     | "server-tun"
@@ -20,128 +22,461 @@ export interface Step {
     | "target-internet"
     | "return-path";
   packetStatus?: "none" | "raw" | "encrypted";
+  packetLabel?: string;
 }
 
-export const demonstrationSteps: Step[] = [
+export interface Phase {
+  id: string;
+  title: string;
+  description: string;
+  steps: Step[];
+}
+
+export const demonstrationPhases: Phase[] = [
   {
-    id: 0,
-    title: "Stan początkowy",
-    explanation:
-      "Symulacja szczegółowa. Widzimy wnętrze hosta: aplikację użytkownika, system operacyjny z interfejsem wirtualnym (TUN) oraz proces klienta VPN.",
-    technicalDetails:
-      "W systemie zainstalowany jest sterownik TAP/TUN. Interfejs TUN (tun0) działa w warstwie 3 (IP) i symuluje fizyczną kartę sieciową, ale zamiast wysyłać prąd do kabla, przekazuje dane do programu (OpenVPN).",
-    activeElements: ["client-host", "server-host"],
-    packetLocation: "start",
-    packetStatus: "none",
+    id: "initiation",
+    title: "1. Inicjacja połączenia",
+    description:
+      "Klient nawiązuje kontakt z serwerem VPN (zwykle UDP/1194) i inicjuje kanał kontrolny OpenVPN.",
+    steps: [
+      {
+        id: 0,
+        title: "Stan początkowy",
+        explanation:
+          "Symulacja szczegółowa. Widzimy wnętrze hosta: aplikację użytkownika, system operacyjny z interfejsem wirtualnym (TUN) oraz proces klienta VPN.",
+        technicalDetails:
+          "W systemie zainstalowany jest sterownik TAP/TUN. Interfejs TUN (tun0) działa w warstwie 3 (IP) i symuluje fizyczną kartę sieciową, ale zamiast wysyłać prąd do kabla, przekazuje dane do programu (OpenVPN).",
+        activeElements: ["client-host", "server-host"],
+        packetLocation: "start",
+        packetStatus: "none",
+      },
+      {
+        id: 1,
+        title: "P_CONTROL_HARD_RESET_CLIENT_V2",
+        explanation:
+          "Klient wysyła pierwszy pakiet kontrolny, aby zainicjować sesję OpenVPN.",
+        technicalDetails:
+          "Pakiet kontrolny OpenVPN (P_CONTROL_HARD_RESET_CLIENT_V2) jest wysyłany UDP/1194 do serwera. Zawiera losowy Session ID i żądanie rozpoczęcia handshake.",
+        activeElements: ["client-vpn-process", "client-nic", "control-tunnel"],
+        packetLocation: "nic-out",
+        packetStatus: "raw",
+        packetLabel: "HARD_RESET_CLIENT",
+      },
+      {
+        id: 2,
+        title: "Kanał kontrolny (Internet)",
+        explanation:
+          "Pakiet inicjujący płynie kanałem kontrolnym przez Internet.",
+        technicalDetails:
+          "To nadal UDP/1194, ale logicznie jest to kanał kontrolny (TLS control).",
+        activeElements: ["control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "raw",
+        packetLabel: "UDP/1194",
+      },
+      {
+        id: 3,
+        title: "P_CONTROL_HARD_RESET_SERVER_V2",
+        explanation:
+          "Serwer odpowiada pakietem resetu i akceptuje rozpoczęcie sesji kontrolnej.",
+        technicalDetails:
+          "Serwer wysyła P_CONTROL_HARD_RESET_SERVER_V2, potwierdzając gotowość do handshake TLS na kanale kontrolnym.",
+        activeElements: ["server-vpn-process", "server-nic", "control-tunnel"],
+        packetLocation: "server-nic-in",
+        packetStatus: "raw",
+        packetLabel: "HARD_RESET_SERVER",
+      },
+      {
+        id: 4,
+        title: "Odpowiedź wraca do klienta",
+        explanation:
+          "Pakiet odpowiedzi serwera wraca kanałem kontrolnym do klienta.",
+        technicalDetails:
+          "Kanał kontrolny jest wykorzystywany do wymiany komunikatów sterujących TLS/OpenVPN.",
+        activeElements: ["control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "raw",
+        packetLabel: "HARD_RESET_SERVER",
+      },
+      {
+        id: 5,
+        title: "Klient odbiera odpowiedź",
+        explanation:
+          "Klient otrzymuje potwierdzenie od serwera i przygotowuje się do handshake TLS.",
+        technicalDetails:
+          "Po odebraniu HARD_RESET_SERVER klient przechodzi do negocjacji TLS.",
+        activeElements: ["client-vpn-process"],
+        packetLocation: "vpn-client-read",
+        packetStatus: "raw",
+        packetLabel: "HARD_RESET_SERVER",
+      },
+    ],
   },
   {
-    id: 1,
-    title: "Generowanie pakietu (Aplikacja)",
-    explanation:
-      "Użytkownik wpisuje adres w przeglądarce. Aplikacja tworzy standardowe żądanie sieciowe.",
-    technicalDetails:
-      "Aplikacja (np. przeglądarka) używa wywołania systemowego socket() i sendto(). Tworzony jest pakiet z docelowym adresem IP (np. 142.250.x.x dla Google).",
-    activeElements: ["client-app"],
-    packetLocation: "app",
-    packetStatus: "raw",
+    id: "authentication",
+    title: "2. Uwierzytelnienie",
+    description:
+      "Serwer weryfikuje tożsamość klienta (certyfikaty, tokeny lub login/hasło).",
+    steps: [
+      {
+        id: 0,
+        title: "Klient wysyła certyfikat",
+        explanation:
+          "Klient przesyła swój certyfikat w kanale kontrolnym.",
+        technicalDetails:
+          "W TLS wysyłany jest łańcuch certyfikatów klienta (Client Certificate).",
+        activeElements: ["client-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "raw",
+        packetLabel: "CERTIFICATE",
+      },
+      {
+        id: 1,
+        title: "Serwer weryfikuje certyfikat",
+        explanation:
+          "Serwer sprawdza ważność certyfikatu klienta i zaufany CA.",
+        technicalDetails:
+          "Weryfikacja obejmuje podpis CA, ważność, CRL/OCSP oraz zgodność CN/OU z polityką serwera.",
+        activeElements: ["server-vpn-process"],
+        packetLocation: "server-vpn-process",
+        packetStatus: "raw",
+        packetLabel: "VERIFY",
+      },
+      {
+        id: 2,
+        title: "AUTH_REQUEST (opcjonalne)",
+        explanation:
+          "Jeśli włączono auth-user-pass lub MFA, serwer żąda dodatkowych poświadczeń.",
+        technicalDetails:
+          "Komunikat AUTH_REQUEST inicjuje dodatkowy etap uwierzytelnienia (login/hasło, OTP). Klient odpowiada AUTH_REPLY.",
+        activeElements: ["server-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "raw",
+        packetLabel: "AUTH_REQUEST",
+      },
+      {
+        id: 3,
+        title: "AUTH_REPLY",
+        explanation:
+          "Klient odsyła dodatkowe poświadczenia.",
+        technicalDetails:
+          "W zależności od konfiguracji może to być login/hasło lub token OTP.",
+        activeElements: ["client-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "raw",
+        packetLabel: "AUTH_REPLY",
+      },
+      {
+        id: 4,
+        title: "AUTH_SUCCESS",
+        explanation:
+          "Serwer potwierdza poprawną autoryzację klienta.",
+        technicalDetails:
+          "Serwer zapisuje sesję jako uwierzytelnioną i przechodzi do negocjacji parametrów kanału danych.",
+        activeElements: ["server-vpn-process"],
+        packetLocation: "server-vpn-process",
+        packetStatus: "raw",
+        packetLabel: "AUTH_SUCCESS",
+      },
+    ],
   },
   {
-    id: 2,
-    title: "Routing systemowy (Kernel)",
-    explanation:
-      "System operacyjny sprawdza tablicę routingu. Domyślna trasa (default gateway) została zmieniona przez VPN, aby kierować ruch na interfejs wirtualny.",
-    technicalDetails:
-      "Kernel sprawdza tablicę routingu (route print / ip route). Widzi, że ruch 0.0.0.0/0 lub specyficzna podsieć ma być kierowana do interfejsu 'tun0'.",
-    activeElements: ["client-os", "client-tun"],
-    packetLocation: "os-stack",
-    packetStatus: "raw",
+    id: "tls-handshake",
+    title: "3. SSL/TLS Handshake",
+    description:
+      "Strony negocjują szyfry i generują klucze sesyjne (PFS).",
+    steps: [
+      {
+        id: 0,
+        title: "TLS ClientHello",
+        explanation:
+          "Klient proponuje wersje TLS i listę szyfrów.",
+        technicalDetails:
+          "ClientHello zawiera listę obsługiwanych cipher suites, rozszerzenia (SNI/ALPN), losowe nonces.",
+        activeElements: ["client-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "raw",
+        packetLabel: "TLS ClientHello",
+      },
+      {
+        id: 1,
+        title: "TLS ServerHello + Certificate",
+        explanation:
+          "Serwer wybiera szyfr i przedstawia certyfikat.",
+        technicalDetails:
+          "ServerHello potwierdza wersję TLS i wybrany szyfr (np. TLS_AES_256_GCM_SHA384). Następuje przesłanie certyfikatu serwera.",
+        activeElements: ["server-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "raw",
+        packetLabel: "TLS ServerHello",
+      },
+      {
+        id: 2,
+        title: "ClientKeyExchange + Finished",
+        explanation:
+          "Klient tworzy klucze sesyjne i kończy handshake.",
+        technicalDetails:
+          "Wymiana kluczy (ECDHE) zapewnia Perfect Forward Secrecy. Po tym komunikaty TLS są już szyfrowane.",
+        activeElements: ["client-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "encrypted",
+        packetLabel: "TLS Finished",
+      },
+      {
+        id: 3,
+        title: "Server Finished",
+        explanation:
+          "Serwer potwierdza zakończenie handshake.",
+        technicalDetails:
+          "Od tej chwili kanał kontrolny jest w pełni szyfrowany i gotowy do wymiany komend.",
+        activeElements: ["server-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "encrypted",
+        packetLabel: "TLS Finished",
+      },
+    ],
   },
   {
-    id: 3,
-    title: "Przekazanie do interfejsu TUN",
-    explanation:
-      "Pakiet trafia do wirtualnej karty sieciowej TUN. Dla systemu wygląda to jak wysłanie do sieci, ale 'kabel' jest podłączony do procesu VPN.",
-    technicalDetails:
-      "Interfejs TUN odbiera ramkę IP. Zamiast wysłać ją w eter, jądro systemu przekazuje dane do deskryptora pliku (/dev/net/tun), który jest otwarty przez proces OpenVPN.",
-    activeElements: ["client-tun"],
-    packetLocation: "tun",
-    packetStatus: "raw",
+    id: "tunnel-creation",
+    title: "4. Zestawienie tunelu",
+    description:
+      "Serwer przypisuje adres, trasy i parametry kanału danych. Tworzony jest interfejs TUN/TAP.",
+    steps: [
+      {
+        id: 0,
+        title: "PUSH_REQUEST",
+        explanation:
+          "Klient prosi o konfigurację tunelu (IP, trasy, DNS).",
+        technicalDetails:
+          "PUSH_REQUEST jest wysyłany w kanale kontrolnym po zakończonym TLS. Klient oczekuje konfiguracji sesji.",
+        activeElements: ["client-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "encrypted",
+        packetLabel: "PUSH_REQUEST",
+      },
+      {
+        id: 1,
+        title: "PUSH_REPLY (ifconfig, route, DNS)",
+        explanation:
+          "Serwer zwraca parametry: IP tunelu, trasy oraz DNS.",
+        technicalDetails:
+          "W PUSH_REPLY znajdują się m.in. ifconfig 10.8.0.2/24, route 0.0.0.0/0 oraz DNS. Klient zapisuje je lokalnie.",
+        activeElements: ["server-vpn-process", "control-tunnel"],
+        packetLocation: "control-tunnel",
+        packetStatus: "encrypted",
+        packetLabel: "PUSH_REPLY",
+      },
+      {
+        id: 2,
+        title: "Konfiguracja TUN i routingu",
+        explanation:
+          "Klient konfiguruje interfejs TUN i aktualizuje tablice routingu.",
+        technicalDetails:
+          "System ustawia adres IP tunelu, dodaje trasy oraz (opcjonalnie) modyfikuje DNS. Ruch domyślny trafia do tunelu.",
+        activeElements: ["client-os", "client-tun", "routing"],
+        packetLocation: "tun",
+        packetStatus: "none",
+      },
+      {
+        id: 3,
+        title: "Initialization Sequence Completed",
+        explanation:
+          "Tunel jest aktywny i gotowy do przesyłania danych.",
+        technicalDetails:
+          "OpenVPN kończy inicjalizację kanału danych. Od tej chwili każdy pakiet będzie szyfrowany i przenoszony tunelem.",
+        activeElements: ["client-vpn-process", "server-vpn-process", "data-tunnel"],
+        packetLocation: "data-tunnel",
+        packetStatus: "encrypted",
+        packetLabel: "READY",
+      },
+    ],
   },
   {
-    id: 4,
-    title: "Odczyt przez Klienta VPN (User Space)",
-    explanation:
-      "Proces OpenVPN 'nasłuchuje' na interfejsie TUN. Odbiera niezaszyfrowany pakiet z jądra systemu.",
-    technicalDetails:
-      "Proces OpenVPN wykonuje operację read() na deskryptorze pliku TUN. Otrzymuje czysty pakiet IP jako payload.",
-    activeElements: ["client-vpn-process"],
-    packetLocation: "vpn-client-read",
-    packetStatus: "raw",
-  },
-  {
-    id: 5,
-    title: "Enkrypcja i Enkapsulacja",
-    explanation:
-      "Kluczowy moment: OpenVPN szyfruje odebrany pakiet i pakuje go w nowy 'kopertę' (nowy pakiet).",
-    technicalDetails:
-      "OpenSSL szyfruje payload (AES-256-GCM). Zaszyfrowany blok staje się danymi nowego pakietu UDP. Dodawane są nagłówki OpenVPN oraz nowy nagłówek IP (źródło: IP fizyczne klienta, cel: IP serwera VPN).",
-    activeElements: ["client-vpn-process"],
-    packetLocation: "vpn-client-encrypt",
-    packetStatus: "encrypted",
-  },
-  {
-    id: 6,
-    title: "Wysłanie do fizycznej karty (NIC)",
-    explanation:
-      "Zaszyfrowany pakiet jest wysyłany przez 'prawdziwą' kartę sieciową (WiFi/Ethernet) do Internetu.",
-    technicalDetails:
-      "Proces OpenVPN używa standardowego gniazda sieciowego (socket) do wysłania zaszyfrowanego pakietu UDP na adres publiczny serwera VPN. Pakiet przechodzi przez fizyczny interfejs (np. eth0/wlan0).",
-    activeElements: ["client-os", "client-nic"],
-    packetLocation: "nic-out",
-    packetStatus: "encrypted",
-  },
-  {
-    id: 7,
-    title: "Tunel VPN (Internet)",
-    explanation:
-      "Pakiet podróżuje przez publiczny Internet. Dla obserwatorów (dostawca internetu, hakerzy) wygląda to jak bełkotliwy strumień danych UDP.",
-    technicalDetails:
-      "Dostawca ISP widzi tylko pakiety UDP płynące między Twoim IP a IP serwera VPN. Nie widzi co jest w środku (np. że to żądanie HTTP do Google).",
-    activeElements: ["internet-tunnel"],
-    packetLocation: "tunnel",
-    packetStatus: "encrypted",
-  },
-  {
-    id: 8,
-    title: "Odbiór przez Serwer VPN",
-    explanation:
-      "Serwer VPN odbiera pakiet na swoim fizycznym interfejsie i przekazuje go do swojego procesu OpenVPN.",
-    technicalDetails:
-      "Pakiet dociera do portu 1194 UDP na serwerze. Proces serwera OpenVPN odbiera go z gniazda sieciowego.",
-    activeElements: ["server-os", "server-nic"],
-    packetLocation: "server-nic-in",
-    packetStatus: "encrypted",
-  },
-  {
-    id: 9,
-    title: "Dekrypcja i Routing na Serwerze",
-    explanation:
-      "Serwer odszyfrowuje pakiet, odzyskując oryginalne żądanie. Następnie kieruje je do Internetu.",
-    technicalDetails:
-      "OpenVPN odszyfrowuje payload, uzyskując oryginalny pakiet IP. Zapisuje go do swojego interfejsu TUN. Jądro serwera odbiera pakiet, wykonuje SNAT (Source NAT - maskarada), zmieniając adres źródłowy na własne publiczne IP.",
-    activeElements: ["server-vpn-process"],
-    packetLocation: "server-vpn-process",
-    packetStatus: "raw",
-  },
-  {
-    id: 10,
-    title: "Dotarcie do celu",
-    explanation:
-      "Oryginalne (odszyfrowane) żądanie dociera do serwera docelowego (np. strony www).",
-    technicalDetails:
-      "Serwer docelowy widzi połączenie przychodzące z adresu IP serwera VPN, a nie oryginalnego klienta.",
-    activeElements: ["target-internet"],
-    packetLocation: "target-internet",
-    packetStatus: "raw",
+    id: "data-transmission",
+    title: "5. Transmisja danych",
+    description:
+      "Pakiety aplikacji są szyfrowane, enkapsulowane i przesyłane przez tunel VPN.",
+    steps: [
+      {
+        id: 0,
+        title: "Generowanie pakietu (Aplikacja)",
+        explanation:
+          "Użytkownik wysyła żądanie, a aplikacja tworzy pakiet IP.",
+        technicalDetails:
+          "Aplikacja (np. przeglądarka) używa socket() i sendto(). Tworzony jest pakiet z docelowym adresem IP (np. 142.250.x.x).",
+        activeElements: ["client-app"],
+        packetLocation: "app",
+        packetStatus: "raw",
+        packetLabel: "IP",
+      },
+      {
+        id: 1,
+        title: "Routing systemowy (Kernel)",
+        explanation:
+          "Kernel kieruje ruch na interfejs TUN zgodnie z trasą domyślną.",
+        technicalDetails:
+          "Tablica routingu (ip route/route print) wskazuje tun0 jako default gateway dla ruchu 0.0.0.0/0.",
+        activeElements: ["client-os", "client-tun", "routing"],
+        packetLocation: "os-stack",
+        packetStatus: "raw",
+        packetLabel: "ROUTE",
+      },
+      {
+        id: 2,
+        title: "Odczyt z TUN",
+        explanation:
+          "Proces OpenVPN odbiera niezaszyfrowany pakiet z interfejsu wirtualnego.",
+        technicalDetails:
+          "OpenVPN wykonuje read() na /dev/net/tun i uzyskuje oryginalny pakiet IP jako payload.",
+        activeElements: ["client-vpn-process"],
+        packetLocation: "vpn-client-read",
+        packetStatus: "raw",
+        packetLabel: "PAYLOAD",
+      },
+      {
+        id: 3,
+        title: "Szyfrowanie + AEAD/HMAC",
+        explanation:
+          "Pakiet jest szyfrowany i podpisywany, a następnie enkapsulowany w UDP.",
+        technicalDetails:
+          "Kanał danych używa AES-256-GCM (AEAD) lub AES-CBC + HMAC. Dodawany jest Packet ID i ochrona przed replay.",
+        activeElements: ["client-vpn-process"],
+        packetLocation: "vpn-client-encrypt",
+        packetStatus: "encrypted",
+        packetLabel: "DATA (AES-GCM)",
+      },
+      {
+        id: 4,
+        title: "Wysłanie do Internetu",
+        explanation:
+          "Zaszyfrowany pakiet opuszcza hosta przez fizyczny interfejs.",
+        technicalDetails:
+          "OpenVPN wysyła UDP/1194 do publicznego IP serwera. Pakiet przechodzi przez NIC (eth0/wlan0).",
+        activeElements: ["client-os", "client-nic"],
+        packetLocation: "nic-out",
+        packetStatus: "encrypted",
+        packetLabel: "UDP/1194",
+      },
+      {
+        id: 5,
+        title: "Tunel VPN (Internet)",
+        explanation:
+          "Pakiet podróżuje przez publiczny Internet jako zaszyfrowany strumień UDP.",
+        technicalDetails:
+          "ISP widzi tylko pakiety UDP między IP klienta i serwera. Treść jest nieczytelna.",
+        activeElements: ["data-tunnel"],
+        packetLocation: "data-tunnel",
+        packetStatus: "encrypted",
+        packetLabel: "ENCRYPTED",
+      },
+      {
+        id: 6,
+        title: "Odbiór na serwerze VPN",
+        explanation:
+          "Serwer odbiera pakiet i weryfikuje integralność.",
+        technicalDetails:
+          "Sprawdzany jest HMAC/AEAD oraz Packet ID (ochrona przed replay). Niepoprawne pakiety są odrzucane.",
+        activeElements: ["server-os", "server-nic"],
+        packetLocation: "server-nic-in",
+        packetStatus: "encrypted",
+        packetLabel: "VERIFY",
+      },
+      {
+        id: 7,
+        title: "Dekapsulacja i zapis do TUN",
+        explanation:
+          "Serwer odszyfrowuje pakiet i kieruje go do interfejsu TUN.",
+        technicalDetails:
+          "OpenVPN odszyfrowuje payload i zapisuje pakiet IP do tun0. Kernel odbiera go jak normalny ruch.",
+        activeElements: ["server-vpn-process", "server-tun"],
+        packetLocation: "server-vpn-process",
+        packetStatus: "raw",
+        packetLabel: "IP",
+      },
+      {
+        id: 8,
+        title: "NAT i wyjście do Internetu",
+        explanation:
+          "Serwer wykonuje maskaradę i wysyła ruch do Internetu.",
+        technicalDetails:
+          "SNAT zmienia adres źródłowy na publiczny IP serwera VPN. Pakiet wychodzi do sieci docelowej.",
+        activeElements: ["server-os", "server-nat"],
+        packetLocation: "server-nat",
+        packetStatus: "raw",
+        packetLabel: "SNAT",
+      },
+      {
+        id: 9,
+        title: "Dotarcie do celu",
+        explanation:
+          "Pakiet dociera do serwera docelowego (np. strony WWW).",
+        technicalDetails:
+          "Serwer docelowy widzi połączenie z publicznego IP serwera VPN, a nie z IP klienta.",
+        activeElements: ["target-internet"],
+        packetLocation: "target-internet",
+        packetStatus: "raw",
+        packetLabel: "HTTP(S)",
+      },
+      {
+        id: 10,
+        title: "Odpowiedź wraca do serwera VPN",
+        explanation:
+          "Serwer docelowy odsyła odpowiedź do publicznego IP serwera VPN.",
+        technicalDetails:
+          "Odpowiedź trafia na interfejs fizyczny serwera VPN i jest przekazywana do OpenVPN.",
+        activeElements: ["server-os", "server-nic"],
+        packetLocation: "server-nic-in",
+        packetStatus: "raw",
+        packetLabel: "RESPONSE",
+      },
+      {
+        id: 11,
+        title: "Szyfrowanie odpowiedzi",
+        explanation:
+          "Serwer szyfruje odpowiedź i enkapsuluje ją w UDP.",
+        technicalDetails:
+          "OpenVPN tworzy pakiet DATA z AES-GCM/HMAC i przygotowuje go do wysłania do klienta.",
+        activeElements: ["server-vpn-process"],
+        packetLocation: "server-vpn-process",
+        packetStatus: "encrypted",
+        packetLabel: "DATA (AES-GCM)",
+      },
+      {
+        id: 12,
+        title: "Powrót tunelem",
+        explanation:
+          "Zaszyfrowany pakiet wraca do klienta przez Internet.",
+        technicalDetails:
+          "Pakiet UDP/1194 wraca tą samą ścieżką sieciową do klienta.",
+        activeElements: ["data-tunnel"],
+        packetLocation: "data-tunnel",
+        packetStatus: "encrypted",
+        packetLabel: "ENCRYPTED",
+      },
+      {
+        id: 13,
+        title: "Odszyfrowanie u klienta",
+        explanation:
+          "Klient weryfikuje integralność i odszyfrowuje odpowiedź.",
+        technicalDetails:
+          "Sprawdzany jest Packet ID, a następnie payload jest odszyfrowany i zapisany do tun0.",
+        activeElements: ["client-vpn-process", "client-tun"],
+        packetLocation: "vpn-client-read",
+        packetStatus: "raw",
+        packetLabel: "IP",
+      },
+      {
+        id: 14,
+        title: "Pakiet trafia do aplikacji",
+        explanation:
+          "Kernel przekazuje odpowiedź do aplikacji użytkownika.",
+        technicalDetails:
+          "System odczytuje pakiet z tun0 i przekazuje go do gniazda aplikacji (np. przeglądarki).",
+        activeElements: ["client-app"],
+        packetLocation: "app",
+        packetStatus: "raw",
+        packetLabel: "RESPONSE",
+      },
+    ],
   },
 ];

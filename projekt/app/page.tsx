@@ -11,20 +11,30 @@ import { useEffect, useState } from "react";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { SimulationBoard } from "@/components/simulation/SimulationBoard";
 import { Button } from "@/components/ui/button";
-import { demonstrationSteps } from "@/lib/demonstration-steps";
+import { demonstrationPhases } from "@/lib/demonstration-steps";
 
 export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedPhaseId, setSelectedPhaseId] = useState(
+    demonstrationPhases[0]?.id ?? "data-transmission",
+  );
 
-  const currentStepData = demonstrationSteps[currentStep];
+  const currentPhase =
+    demonstrationPhases.find((phase) => phase.id === selectedPhaseId) ??
+    demonstrationPhases[0];
+  const phaseIndex = demonstrationPhases.findIndex(
+    (phase) => phase.id === currentPhase.id,
+  );
+  const steps = currentPhase.steps;
+  const currentStepData = steps[currentStep];
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
     if (isPlaying) {
       interval = setInterval(() => {
-        if (currentStep < demonstrationSteps.length - 1) {
+        if (currentStep < steps.length - 1) {
           setCurrentStep((prev) => prev + 1);
         } else {
           setIsPlaying(false);
@@ -33,10 +43,10 @@ export default function Home() {
     }
 
     return () => clearInterval(interval);
-  }, [isPlaying, currentStep]);
+  }, [isPlaying, currentStep, steps.length]);
 
   const handlePlay = () => {
-    if (currentStep === demonstrationSteps.length - 1) {
+    if (currentStep === steps.length - 1) {
       setCurrentStep(0);
     }
     setIsPlaying(true);
@@ -52,7 +62,7 @@ export default function Home() {
   };
 
   const handleNext = () => {
-    if (currentStep < demonstrationSteps.length - 1) {
+    if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -63,11 +73,50 @@ export default function Home() {
     }
   };
 
+  const handlePhaseChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedPhaseId(event.target.value);
+    setIsPlaying(false);
+    setCurrentStep(0);
+  };
+
+  const handlePreviousPhase = () => {
+    if (phaseIndex > 0) {
+      const previousPhase = demonstrationPhases[phaseIndex - 1];
+      setSelectedPhaseId(previousPhase.id);
+      setIsPlaying(false);
+      setCurrentStep(previousPhase.steps.length - 1);
+    }
+  };
+
+  const handleNextPhase = () => {
+    if (phaseIndex < demonstrationPhases.length - 1) {
+      const nextPhase = demonstrationPhases[phaseIndex + 1];
+      setSelectedPhaseId(nextPhase.id);
+      setIsPlaying(false);
+      setCurrentStep(0);
+    }
+  };
+
   return (
     <div className="h-screen w-screen overflow-hidden bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex flex-col">
       {/* Header */}
       <header className="flex h-16 items-center justify-between px-8 border-b border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm z-50">
-        <div className="w-48" /> {/* Spacer for centering */}
+        <div className="w-64 flex items-center gap-2">
+          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            Faza
+          </label>
+          <select
+            value={selectedPhaseId}
+            onChange={handlePhaseChange}
+            className="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+          >
+            {demonstrationPhases.map((phase) => (
+              <option key={phase.id} value={phase.id}>
+                {phase.title}
+              </option>
+            ))}
+          </select>
+        </div>
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
           Symulacja protokołu OpenVPN
         </h1>
@@ -116,33 +165,58 @@ export default function Home() {
         {/* Explanation Panel - Always visible at bottom, or conditional */}
         <div className="z-50 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border-t border-slate-200 dark:border-slate-700 shrink-0">
           {/* Navigation controls - Moved here for better UX */}
-          <div className="flex items-center justify-center gap-4 py-2 border-b border-slate-200/50 dark:border-slate-700/50">
-            <Button
-              onClick={handlePrevious}
-              variant="outline"
-              size="sm"
-              disabled={currentStep === 0}
-              className="gap-1"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Wstecz
-            </Button>
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-              Krok {currentStep + 1} z {demonstrationSteps.length}
-            </span>
-            <Button
-              onClick={handleNext}
-              variant="outline"
-              size="sm"
-              disabled={currentStep === demonstrationSteps.length - 1}
-              className="gap-1"
-            >
-              Dalej
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+          <div className="flex items-center justify-center gap-4 py-2 border-b border-slate-200/50 dark:border-slate-700/50 px-4">
+            <div className="flex items-center justify-center gap-3">
+              <Button
+                onClick={handlePreviousPhase}
+                variant="ghost"
+                size="sm"
+                className="gap-1"
+                disabled={phaseIndex === 0}
+              >
+                Poprzednia faza
+              </Button>
+              <Button
+                onClick={handlePrevious}
+                variant="outline"
+                size="sm"
+                disabled={currentStep === 0}
+                className="gap-1"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Wstecz
+              </Button>
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                Krok {currentStep + 1} z {steps.length}
+              </span>
+              <Button
+                onClick={handleNext}
+                variant="outline"
+                size="sm"
+                disabled={currentStep === steps.length - 1}
+                className="gap-1"
+              >
+                Dalej
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Button
+                onClick={handleNextPhase}
+                variant="ghost"
+                size="sm"
+                className="gap-1"
+                disabled={phaseIndex === demonstrationPhases.length - 1}
+              >
+                Następna faza
+              </Button>
+            </div>
           </div>
 
-          <ExplanationPanel step={currentStepData} isVisible={true} />
+          <ExplanationPanel
+            step={currentStepData}
+            isVisible={true}
+            phaseTitle={currentPhase.title}
+            phaseDescription={currentPhase.description}
+          />
         </div>
       </main>
     </div>
