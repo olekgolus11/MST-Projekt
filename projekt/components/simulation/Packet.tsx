@@ -15,8 +15,6 @@ export const Packet: React.FC<PacketProps> = ({
   fallbackPosition,
   label,
 }) => {
-  if (status === "none") return null;
-
   const packetRef = useRef<HTMLDivElement | null>(null);
   const hasPath = path.length > 1;
   const safePath = path.length > 0 ? path : [fallbackPosition];
@@ -25,21 +23,57 @@ export const Packet: React.FC<PacketProps> = ({
   useEffect(() => {
     if (!packetRef.current || !hasPath) return;
 
-    const frames = safePath.map((point) => ({
-      left: `${point.x}%`,
-      top: `${point.y}%`,
-    }));
+    let cancelled = false;
+    const animations: Animation[] = [];
 
-    const duration = Math.max(900, 700 * (safePath.length - 1));
+    const runAnimations = async () => {
+      // Animate through each segment of the path
+      for (let i = 0; i < safePath.length - 1; i++) {
+        if (cancelled) break;
 
-    const animation = packetRef.current.animate(frames, {
-      duration,
-      easing: "ease-in-out",
-      fill: "forwards",
-    });
+        const from = safePath[i];
+        const to = safePath[i + 1];
 
-    return () => animation.cancel();
+        // Animate from current point to next point
+        const animation = packetRef.current!.animate(
+          [
+            { left: `${from.x}%`, top: `${from.y}%` },
+            { left: `${to.x}%`, top: `${to.y}%` },
+          ],
+          {
+            duration: 1000, // 1 second per segment
+            easing: "ease-in-out",
+            fill: "forwards",
+          },
+        );
+
+        animations.push(animation);
+
+        try {
+          await animation.finished;
+        } catch {
+          // Animation was cancelled
+          break;
+        }
+
+        // Pause at intermediate points (not at the final point)
+        if (i < safePath.length - 2 && !cancelled) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
+      }
+    };
+
+    runAnimations();
+
+    return () => {
+      cancelled = true;
+      animations.forEach((anim) => {
+        anim.cancel();
+      });
+    };
   }, [hasPath, safePath]);
+
+  if (status === "none") return null;
 
   return (
     <div

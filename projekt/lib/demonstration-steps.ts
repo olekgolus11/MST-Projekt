@@ -111,11 +111,7 @@ export const demonstrationPhases: Phase[] = [
         packetLocation: "control-tunnel",
         packetFrom: "server-nic-in",
         packetTo: "control-tunnel",
-        packetPath: [
-          "server-nic-in",
-          "server-vpn-process",
-          "control-tunnel",
-        ],
+        packetPath: ["server-nic-in", "server-vpn-process", "control-tunnel"],
         packetStatus: "raw",
         packetLabel: "HARD_RESET_SERVER",
       },
@@ -145,8 +141,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 0,
         title: "Klient wysyła certyfikat",
-        explanation:
-          "Klient przesyła swój certyfikat w kanale kontrolnym.",
+        explanation: "Klient przesyła swój certyfikat w kanale kontrolnym.",
         technicalDetails:
           "W TLS wysyłany jest łańcuch certyfikatów klienta (Client Certificate).",
         activeElements: ["client-vpn-process", "control-tunnel"],
@@ -190,8 +185,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 3,
         title: "AUTH_REPLY",
-        explanation:
-          "Klient odsyła dodatkowe poświadczenia.",
+        explanation: "Klient odsyła dodatkowe poświadczenia.",
         technicalDetails:
           "W zależności od konfiguracji może to być login/hasło lub token OTP.",
         activeElements: ["client-vpn-process", "control-tunnel"],
@@ -210,8 +204,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 4,
         title: "AUTH_SUCCESS",
-        explanation:
-          "Serwer potwierdza poprawną autoryzację klienta.",
+        explanation: "Serwer potwierdza poprawną autoryzację klienta.",
         technicalDetails:
           "Serwer zapisuje sesję jako uwierzytelnioną i przechodzi do negocjacji parametrów kanału danych.",
         activeElements: ["server-vpn-process", "control-tunnel"],
@@ -232,14 +225,12 @@ export const demonstrationPhases: Phase[] = [
   {
     id: "tls-handshake",
     title: "3. SSL/TLS Handshake",
-    description:
-      "Strony negocjują szyfry i generują klucze sesyjne (PFS).",
+    description: "Strony negocjują szyfry i generują klucze sesyjne (PFS).",
     steps: [
       {
         id: 0,
         title: "TLS ClientHello",
-        explanation:
-          "Klient proponuje wersje TLS i listę szyfrów.",
+        explanation: "Klient proponuje wersje TLS i listę szyfrów.",
         technicalDetails:
           "ClientHello zawiera listę obsługiwanych cipher suites, rozszerzenia (SNI/ALPN), losowe nonces.",
         activeElements: ["client-vpn-process", "control-tunnel"],
@@ -253,8 +244,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 1,
         title: "TLS ServerHello + Certificate",
-        explanation:
-          "Serwer wybiera szyfr i przedstawia certyfikat.",
+        explanation: "Serwer wybiera szyfr i przedstawia certyfikat.",
         technicalDetails:
           "ServerHello potwierdza wersję TLS i wybrany szyfr (np. TLS_AES_256_GCM_SHA384). Następuje przesłanie certyfikatu serwera.",
         activeElements: ["server-vpn-process", "control-tunnel"],
@@ -273,8 +263,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 2,
         title: "ClientKeyExchange + Finished",
-        explanation:
-          "Klient tworzy klucze sesyjne i kończy handshake.",
+        explanation: "Klient tworzy klucze sesyjne i kończy handshake.",
         technicalDetails:
           "Wymiana kluczy (ECDHE) zapewnia Perfect Forward Secrecy. Po tym komunikaty TLS są już szyfrowane.",
         activeElements: ["client-vpn-process", "control-tunnel"],
@@ -288,8 +277,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 3,
         title: "Server Finished",
-        explanation:
-          "Serwer potwierdza zakończenie handshake.",
+        explanation: "Serwer potwierdza zakończenie handshake.",
         technicalDetails:
           "Od tej chwili kanał kontrolny jest w pełni szyfrowany i gotowy do wymiany komend.",
         activeElements: ["server-vpn-process", "control-tunnel"],
@@ -316,8 +304,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 0,
         title: "PUSH_REQUEST",
-        explanation:
-          "Klient prosi o konfigurację tunelu (IP, trasy, DNS).",
+        explanation: "Klient prosi o konfigurację tunelu (IP, trasy, DNS).",
         technicalDetails:
           "PUSH_REQUEST jest wysyłany w kanale kontrolnym po zakończonym TLS. Klient oczekuje konfiguracji sesji.",
         activeElements: ["client-vpn-process", "control-tunnel"],
@@ -331,8 +318,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 1,
         title: "PUSH_REPLY (ifconfig, route, DNS)",
-        explanation:
-          "Serwer zwraca parametry: IP tunelu, trasy oraz DNS.",
+        explanation: "Serwer zwraca parametry: IP tunelu, trasy oraz DNS.",
         technicalDetails:
           "W PUSH_REPLY znajdują się m.in. ifconfig 10.8.0.2/24, route 0.0.0.0/0 oraz DNS. Klient zapisuje je lokalnie.",
         activeElements: ["server-vpn-process", "control-tunnel"],
@@ -365,11 +351,14 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 3,
         title: "Initialization Sequence Completed",
-        explanation:
-          "Tunel jest aktywny i gotowy do przesyłania danych.",
+        explanation: "Tunel jest aktywny i gotowy do przesyłania danych.",
         technicalDetails:
           "OpenVPN kończy inicjalizację kanału danych. Od tej chwili każdy pakiet będzie szyfrowany i przenoszony tunelem.",
-        activeElements: ["client-vpn-process", "server-vpn-process", "data-tunnel"],
+        activeElements: [
+          "client-vpn-process",
+          "server-vpn-process",
+          "data-tunnel",
+        ],
         packetLocation: "data-tunnel",
         packetFrom: "vpn-client-read",
         packetTo: "data-tunnel",
@@ -388,8 +377,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 0,
         title: "Generowanie pakietu (Aplikacja)",
-        explanation:
-          "Użytkownik wysyła żądanie, a aplikacja tworzy pakiet IP.",
+        explanation: "Użytkownik wysyła żądanie, a aplikacja tworzy pakiet IP.",
         technicalDetails:
           "Aplikacja (np. przeglądarka) używa socket() i sendto(). Tworzony jest pakiet z docelowym adresem IP (np. 142.250.x.x).",
         activeElements: ["client-app"],
@@ -477,8 +465,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 6,
         title: "Odbiór na serwerze VPN",
-        explanation:
-          "Serwer odbiera pakiet i weryfikuje integralność.",
+        explanation: "Serwer odbiera pakiet i weryfikuje integralność.",
         technicalDetails:
           "Sprawdzany jest HMAC/AEAD oraz Packet ID (ochrona przed replay). Niepoprawne pakiety są odrzucane.",
         activeElements: ["server-os", "server-nic"],
@@ -507,8 +494,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 8,
         title: "NAT i wyjście do Internetu",
-        explanation:
-          "Serwer wykonuje maskaradę i wysyła ruch do Internetu.",
+        explanation: "Serwer wykonuje maskaradę i wysyła ruch do Internetu.",
         technicalDetails:
           "SNAT zmienia adres źródłowy na publiczny IP serwera VPN. Pakiet wychodzi do sieci docelowej.",
         activeElements: ["server-os", "server-nat"],
@@ -522,8 +508,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 9,
         title: "Dotarcie do celu",
-        explanation:
-          "Pakiet dociera do serwera docelowego (np. strony WWW).",
+        explanation: "Pakiet dociera do serwera docelowego (np. strony WWW).",
         technicalDetails:
           "Serwer docelowy widzi połączenie z publicznego IP serwera VPN, a nie z IP klienta.",
         activeElements: ["target-internet"],
@@ -552,8 +537,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 11,
         title: "Szyfrowanie odpowiedzi",
-        explanation:
-          "Serwer szyfruje odpowiedź i enkapsuluje ją w UDP.",
+        explanation: "Serwer szyfruje odpowiedź i enkapsuluje ją w UDP.",
         technicalDetails:
           "OpenVPN tworzy pakiet DATA z AES-GCM/HMAC i przygotowuje go do wysłania do klienta.",
         activeElements: ["server-vpn-process"],
@@ -567,8 +551,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 12,
         title: "Powrót tunelem",
-        explanation:
-          "Zaszyfrowany pakiet wraca do klienta przez Internet.",
+        explanation: "Zaszyfrowany pakiet wraca do klienta przez Internet.",
         technicalDetails:
           "Pakiet UDP/1194 wraca tą samą ścieżką sieciową do klienta.",
         activeElements: ["data-tunnel"],
@@ -612,8 +595,7 @@ export const demonstrationPhases: Phase[] = [
       {
         id: 15,
         title: "Pakiet trafia do aplikacji",
-        explanation:
-          "Kernel przekazuje odpowiedź do aplikacji użytkownika.",
+        explanation: "Kernel przekazuje odpowiedź do aplikacji użytkownika.",
         technicalDetails:
           "System odczytuje pakiet z tun0 i przekazuje go do gniazda aplikacji (np. przeglądarki).",
         activeElements: ["client-app"],
