@@ -11,16 +11,16 @@ const COORDINATES: Record<string, { x: number; y: number }> = {
   start: { x: 21, y: 18 },
   app: { x: 21, y: 18 },
   "os-stack": { x: 15, y: 50 },
-  tun: { x: 30, y: 45 },
+  tun: { x: 30, y: 65 },
   "vpn-client-read": { x: 21, y: 85 },
   "vpn-client-encrypt": { x: 21, y: 85 },
-  "nic-out": { x: 30, y: 65 },
+  "nic-out": { x: 30, y: 45 },
   tunnel: { x: 50, y: 50 },
   "control-tunnel": { x: 50, y: 50 },
   "data-tunnel": { x: 50, y: 78 },
-  "server-nic-in": { x: 88, y: 65 },
+  "server-nic-in": { x: 88, y: 45 },
   "server-vpn-process": { x: 79, y: 85 },
-  "server-tun": { x: 88, y: 45 },
+  "server-tun": { x: 88, y: 65 },
   "server-nat": { x: 70, y: 50 },
   "target-internet": { x: 79, y: 18 },
 };
@@ -40,9 +40,9 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
   const packetPathKeys = currentStep.packetPath;
   const packetPath = packetPathKeys
     ? packetPathKeys.map((key) => {
-        const safeKey = (key ?? "start") as keyof typeof COORDINATES;
-        return COORDINATES[safeKey] || COORDINATES["start"];
-      })
+      const safeKey = (key ?? "start") as keyof typeof COORDINATES;
+      return COORDINATES[safeKey] || COORDINATES["start"];
+    })
     : [packetFrom, packetTo];
   const highlightKeys = packetPathKeys ?? [packetFromKey, packetToKey];
   const isControlActive = highlightKeys.includes("control-tunnel");
@@ -79,11 +79,10 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
           stroke="currentColor"
           strokeWidth="4"
           strokeDasharray="8 8"
-          className={`${
-            isControlActive
+          className={`${isControlActive
               ? "text-blue-400"
               : "text-slate-300 dark:text-slate-700"
-          } opacity-60`}
+            } opacity-60`}
         />
         {/* Data tunnel line */}
         <line
@@ -94,11 +93,10 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
           stroke="currentColor"
           strokeWidth="4"
           strokeDasharray="8 8"
-          className={`${
-            isDataActive
+          className={`${isDataActive
               ? "text-amber-400"
               : "text-slate-300 dark:text-slate-700"
-          } opacity-60`}
+            } opacity-60`}
         />
       </svg>
 
@@ -112,22 +110,20 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
         <div
           className={`
           absolute inset-x-0 h-16 border-y-2 border-dashed transition-colors duration-500
-          ${
-            isControlActive
+          ${isControlActive
               ? "bg-blue-50/40 dark:bg-blue-900/10 border-blue-400"
               : "border-slate-300 dark:border-slate-700"
-          }
+            }
         `}
           style={{ top: "44%" }}
         />
         <div
           className={`
           absolute inset-x-0 h-16 border-y-2 border-dashed transition-colors duration-500
-          ${
-            isDataActive
+          ${isDataActive
               ? "bg-amber-50/40 dark:bg-amber-900/10 border-amber-400"
               : "border-slate-300 dark:border-slate-700"
-          }
+            }
         `}
           style={{ top: "70%" }}
         />
@@ -135,20 +131,18 @@ export const SimulationBoard: React.FC<SimulationBoardProps> = ({
           Internet
         </span>
         <span
-          className={`absolute left-1/2 top-[50%] -translate-x-1/2 text-[11px] font-mono px-2.5 py-1 rounded border ${
-            isControlActive
+          className={`absolute left-1/2 top-[50%] -translate-x-1/2 text-[11px] font-mono px-2.5 py-1 rounded border ${isControlActive
               ? "text-blue-600 border-blue-200 bg-blue-50"
               : "text-slate-400 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-          }`}
+            }`}
         >
           Control Tunnel (TLS)
         </span>
         <span
-          className={`absolute left-1/2 top-[78%] -translate-x-1/2 text-[11px] font-mono px-2.5 py-1 rounded border ${
-            isDataActive
+          className={`absolute left-1/2 top-[78%] -translate-x-1/2 text-[11px] font-mono px-2.5 py-1 rounded border ${isDataActive
               ? "text-amber-600 border-amber-200 bg-amber-50"
               : "text-slate-400 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-          }`}
+            }`}
         >
           Data Tunnel (UDP:1194)
         </span>

@@ -5,22 +5,22 @@ export interface Step {
   technicalDetails: string;
   activeElements: string[];
   packetLocation?:
-    | "start"
-    | "app"
-    | "os-stack"
-    | "tun"
-    | "vpn-client-read"
-    | "vpn-client-encrypt"
-    | "nic-out"
-    | "tunnel"
-    | "control-tunnel"
-    | "data-tunnel"
-    | "server-nic-in"
-    | "server-vpn-process"
-    | "server-tun"
-    | "server-nat"
-    | "target-internet"
-    | "return-path";
+  | "start"
+  | "app"
+  | "os-stack"
+  | "tun"
+  | "vpn-client-read"
+  | "vpn-client-encrypt"
+  | "nic-out"
+  | "tunnel"
+  | "control-tunnel"
+  | "data-tunnel"
+  | "server-nic-in"
+  | "server-vpn-process"
+  | "server-tun"
+  | "server-nat"
+  | "target-internet"
+  | "return-path";
   packetFrom?: Step["packetLocation"];
   packetTo?: Step["packetLocation"];
   packetPath?: Step["packetLocation"][];
@@ -46,9 +46,9 @@ export const demonstrationPhases: Phase[] = [
         id: 0,
         title: "Stan początkowy",
         explanation:
-          "Symulacja szczegółowa. Widzimy wnętrze hosta: aplikację użytkownika, system operacyjny z interfejsem wirtualnym (TUN) oraz proces klienta VPN.",
+          "Symulacja szczegółowa. Widzimy wnętrze hosta i klienta: aplikację użytkownika, system operacyjny z interfejsem wirtualnym (TUN) oraz proces VPN.",
         technicalDetails:
-          "W systemie zainstalowany jest sterownik TAP/TUN. Interfejs TUN (tun0) działa w warstwie 3 (IP) i symuluje fizyczną kartę sieciową, ale zamiast wysyłać prąd do kabla, przekazuje dane do programu (OpenVPN).",
+          "W systemie zainstalowany jest sterownik TAP/TUN. Interfejs TUN (tun0) działa w warstwie 3 (IP) i symuluje fizyczną kartę sieciową. Po zestawieniu połaczenia system zamiast wysyłać pakiety przez kabel będzie przekazywać dane do programu (OpenVPN).",
         activeElements: ["client-host", "server-host"],
         packetLocation: "start",
         packetFrom: "start",
@@ -65,8 +65,8 @@ export const demonstrationPhases: Phase[] = [
         activeElements: ["client-vpn-process", "client-nic", "control-tunnel"],
         packetLocation: "nic-out",
         packetFrom: "vpn-client-encrypt",
-        packetTo: "nic-out",
-        packetPath: ["vpn-client-encrypt", "nic-out"],
+        packetTo: "control-tunnel",
+        packetPath: ["vpn-client-encrypt", "nic-out", "control-tunnel"],
         packetStatus: "raw",
         packetLabel: "HARD_RESET_CLIENT",
       },
@@ -74,16 +74,16 @@ export const demonstrationPhases: Phase[] = [
         id: 2,
         title: "Kanał kontrolny (Internet)",
         explanation:
-          "Pakiet inicjujący płynie kanałem kontrolnym przez Internet.",
+          "Pakiet inicjujący płynie kanałem kontrolnym przez Internet i dociera do serwera",
         technicalDetails:
           "To nadal UDP/1194, ale logicznie jest to kanał kontrolny (TLS control).",
-        activeElements: ["control-tunnel"],
+        activeElements: ["control-tunnel", "server-nic", "server-vpn-process"],
         packetLocation: "control-tunnel",
-        packetFrom: "nic-out",
-        packetTo: "control-tunnel",
-        packetPath: ["nic-out", "control-tunnel"],
+        packetFrom: "control-tunnel",
+        packetTo: "server-vpn-process",
+        packetPath: ["control-tunnel", "server-nic-in", "server-vpn-process"],
         packetStatus: "raw",
-        packetLabel: "UDP/1194",
+        packetLabel: "HARD_RESET_CLIENT",
       },
       {
         id: 3,
@@ -92,11 +92,11 @@ export const demonstrationPhases: Phase[] = [
           "Serwer odpowiada pakietem resetu i akceptuje rozpoczęcie sesji kontrolnej.",
         technicalDetails:
           "Serwer wysyła P_CONTROL_HARD_RESET_SERVER_V2, potwierdzając gotowość do handshake TLS na kanale kontrolnym.",
-        activeElements: ["server-nic", "control-tunnel"],
-        packetLocation: "server-nic-in",
-        packetFrom: "control-tunnel",
-        packetTo: "server-nic-in",
-        packetPath: ["control-tunnel", "server-nic-in"],
+        activeElements: ["server-nic", "control-tunnel", "server-vpn-process"],
+        packetLocation: "server-vpn-process",
+        packetFrom: "server-vpn-process",
+        packetTo: "control-tunnel",
+        packetPath: ["server-vpn-process", "server-nic-in", "control-tunnel"],
         packetStatus: "raw",
         packetLabel: "HARD_RESET_SERVER",
       },
@@ -107,11 +107,11 @@ export const demonstrationPhases: Phase[] = [
           "Pakiet odpowiedzi serwera wraca kanałem kontrolnym do klienta.",
         technicalDetails:
           "Kanał kontrolny jest wykorzystywany do wymiany komunikatów sterujących TLS/OpenVPN.",
-        activeElements: ["server-vpn-process", "control-tunnel"],
+        activeElements: ["control-tunnel", "client-nic", "client-vpn-process"],
         packetLocation: "control-tunnel",
-        packetFrom: "server-nic-in",
-        packetTo: "control-tunnel",
-        packetPath: ["server-nic-in", "server-vpn-process", "control-tunnel"],
+        packetFrom: "control-tunnel",
+        packetTo: "vpn-client-read",
+        packetPath: ["control-tunnel", "nic-out", "vpn-client-read"],
         packetStatus: "raw",
         packetLabel: "HARD_RESET_SERVER",
       },
@@ -124,9 +124,9 @@ export const demonstrationPhases: Phase[] = [
           "Po odebraniu HARD_RESET_SERVER klient przechodzi do negocjacji TLS.",
         activeElements: ["client-vpn-process"],
         packetLocation: "vpn-client-read",
-        packetFrom: "control-tunnel",
+        packetFrom: "vpn-client-read",
         packetTo: "vpn-client-read",
-        packetPath: ["control-tunnel", "vpn-client-read"],
+        packetPath: ["vpn-client-read"],
         packetStatus: "raw",
         packetLabel: "HARD_RESET_SERVER",
       },
@@ -149,6 +149,8 @@ export const demonstrationPhases: Phase[] = [
           "client-vpn-process",
           "control-tunnel",
           "server-vpn-process",
+          "client-nic",
+          "server-nic"
         ],
         packetLocation: "server-vpn-process",
         packetFrom: "vpn-client-encrypt",

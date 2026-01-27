@@ -50,10 +50,9 @@ export const HostSystem: React.FC<HostSystemProps> = ({
     <div
       className={`
         relative p-2 rounded-lg border-2 transition-all duration-300 flex flex-col items-center gap-1 justify-center
-        ${
-          isActive(id)
-            ? "border-amber-500 bg-amber-50/50 dark:bg-amber-900/10 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
-            : "border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50"
+        ${isActive(id)
+          ? "border-amber-500 bg-amber-50/50 dark:bg-amber-900/10 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+          : "border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50"
         }
         ${className}
       `}
@@ -68,9 +67,8 @@ export const HostSystem: React.FC<HostSystemProps> = ({
 
   return (
     <Card
-      className={`h-full border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm flex flex-col overflow-hidden ${
-        isClient ? "rounded-r-none border-r-0" : "rounded-l-none border-l-0"
-      }`}
+      className={`h-full border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm flex flex-col overflow-hidden ${isClient ? "rounded-r-none border-r-0" : "rounded-l-none border-l-0"
+        }`}
     >
       <CardHeader className="pb-2 px-4 py-3 shrink-0">
         <CardTitle className="flex items-center gap-2 text-base">
@@ -110,11 +108,10 @@ export const HostSystem: React.FC<HostSystemProps> = ({
             className={`
             w-full h-full border-2 border-dashed rounded-xl p-2 pt-4
             flex flex-col
-            ${
-              isActive(osId)
+            ${isActive(osId)
                 ? "border-indigo-400 bg-indigo-50/30 dark:bg-indigo-900/10"
                 : "border-slate-200 dark:border-slate-800"
-            }
+              }
           `}
           >
             <span className="absolute -top-2.5 left-4 bg-white dark:bg-slate-950 px-2 text-[10px] font-mono text-slate-500 uppercase tracking-wider border rounded-full">
@@ -135,16 +132,6 @@ export const HostSystem: React.FC<HostSystemProps> = ({
               {/* Right Column: Interfaces */}
               <div className="flex flex-col gap-2 h-full">
                 <Box
-                  id={tunId}
-                  label="Interfejs TUN (Virtual)"
-                  icon={FileText}
-                  className="flex-1 w-full border-blue-200 dark:border-blue-900"
-                >
-                   <div className="text-[9px] text-slate-400 text-center font-mono">
-                    10.8.0.{isClient ? "2" : "1"}
-                   </div>
-                </Box>
-                <Box
                   id={nicId}
                   label="Karta Fizyczna (NIC)"
                   icon={Network}
@@ -152,6 +139,16 @@ export const HostSystem: React.FC<HostSystemProps> = ({
                 >
                   <div className="text-[9px] text-slate-400 text-center font-mono">
                     {isClient ? "192.168.1.100" : "185.245.12.34"}
+                  </div>
+                </Box>
+                <Box
+                  id={tunId}
+                  label="Interfejs TUN (Virtual)"
+                  icon={FileText}
+                  className="flex-1 w-full border-blue-200 dark:border-blue-900"
+                >
+                  <div className="text-[9px] text-slate-400 text-center font-mono">
+                    10.8.0.{isClient ? "2" : "1"}
                   </div>
                 </Box>
               </div>
