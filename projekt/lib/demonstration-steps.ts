@@ -334,7 +334,7 @@ export const demonstrationPhases: Phase[] = [
           "Serwer żąda dodatkowego uwierzytelnienia - loginu i hasła lub tokenu OTP. Ten etap jest opcjonalny (zależy od konfiguracji auth-user-pass).",
         technicalDetails:
           "Komunikat AUTH_REQUEST jest wysyłany w zaszyfrowanym kanale kontrolnym. Może zawierać informacje o wymaganym typie uwierzytelnienia (hasło, token TOTP, certyfikat sprzętowy).",
-        activeElements: ["server-vpn-process", "control-tunnel"],
+        activeElements: ["server-vpn-process", "control-tunnel", "client-vpn-process"],
         packetLocation: "vpn-client-read",
         packetFrom: "server-vpn-process",
         packetTo: "vpn-client-read",
@@ -353,7 +353,7 @@ export const demonstrationPhases: Phase[] = [
         packetLocation: "server-vpn-process",
         packetFrom: "vpn-client-encrypt",
         packetTo: "server-vpn-process",
-        packetPath: ["vpn-client-read", "vpn-client-encrypt", "control-tunnel", "server-vpn-process"],
+        packetPath: ["vpn-client-encrypt", "control-tunnel", "server-vpn-process"],
         packetStatus: "encrypted",
         packetLabel: "AUTH_REPLY",
       },
