@@ -172,7 +172,7 @@ export const demonstrationPhases: Phase[] = [
           "Serwer odpowiada, wybierając wersję TLS i algorytm szyfrowania z propozycji klienta.",
         technicalDetails:
           "ServerHello zawiera: wybraną wersję TLS, wybrany cipher suite, losowy nonce serwera. To potwierdza parametry sesji TLS.",
-        activeElements: ["server-vpn-process", "control-tunnel"],
+        activeElements: ["server-vpn-process", "control-tunnel", "client-vpn-process", "client-nic", "server-nic"],
         packetLocation: "vpn-client-read",
         packetFrom: "server-vpn-process",
         packetTo: "vpn-client-read",
@@ -180,6 +180,7 @@ export const demonstrationPhases: Phase[] = [
           "server-vpn-process",
           "server-nic-in",
           "control-tunnel",
+          "nic-out",
           "vpn-client-read",
         ],
         packetStatus: "raw",
@@ -269,6 +270,8 @@ export const demonstrationPhases: Phase[] = [
           "vpn-client-encrypt",
           "control-tunnel",
           "server-vpn-process",
+          "control-tunnel",
+          "vpn-client-encrypt"
         ],
         packetStatus: "raw",
         packetLabel: "ChangeCipherSpec",
